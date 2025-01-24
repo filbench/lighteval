@@ -32,6 +32,26 @@ from lighteval.tasks.lighteval_task import LightevalTaskConfig
 from lighteval.tasks.requests import Doc
 
 
+class CustomFilipinoMMLUTask(LightevalTaskConfig):
+    def __init__(self, name, hf_subset):
+        super().__init__(
+            name=name,
+            hf_subset=hf_subset,
+            prompt_function=filipino_global_mmlu_pfn,
+            hf_repo="UD-Filipino/Global-MMLU-Filipino",
+            metric=[Metrics.loglikelihood_acc_norm],
+            hf_avail_splits=["test"],
+            evaluation_splits=["dev"],
+            few_shots_split=["dev"],
+            few_shots_select="sequential",
+            suite=["filbench"],
+            generation_size=-1,
+            stop_sequence=None,
+            trust_dataset=True,
+            version=0,
+        )
+
+
 def filipino_global_mmlu_pfn(line, task_name: str = None) -> Doc:
     instruction = "Ang sumusunod na tanong ay isang multiple-choice na tanong. Piliin ang tamang sagot:\n\n"
     choices = []
@@ -57,7 +77,7 @@ def filipino_global_mmlu_pfn(line, task_name: str = None) -> Doc:
 
 
 # fmt: off
-MMLU_SUBSETS = [
+FILIPINO_GLOBAL_MMLU_SUBSETS = [
     "abstract_algebra", "anatomy", "astronomy", "business_ethics", "clinical_knowledge", "college_biology", "college_chemistry", "college_computer_science",
     "college_mathematics", "college_medicine", "college_physics", "computer_security", "conceptual_physics", "econometrics", "electrical_engineering",
     "elementary_mathematics", "formal_logic", "global_facts", "high_school_biology", "high_school_chemistry", "high_school_computer_science",
@@ -70,25 +90,6 @@ MMLU_SUBSETS = [
 # fmt: on
 
 
-def create_global_mmlu_task(name: str, hf_subset: str) -> LightevalTaskConfig:
-    return LightevalTaskConfig(
-        name=name,
-        hf_subset=hf_subset,
-        prompt_function=filipino_global_mmlu_pfn,
-        hf_repo="UD-Filipino/Global-MMLU-Filipino",
-        metric=[Metrics.loglikelihood_acc_norm],
-        hf_avail_splits=["test"],
-        evaluation_splits=["dev"],
-        few_shots_split=["dev"],
-        few_shots_select="sequential",
-        suite=["filbench"],
-        generation_size=-1,
-        stop_sequence=None,
-        trust_dataset=True,
-        version=0,
-    )
-
-
 FILIPINO_GLOBAL_MMLU_TASKS = [
-    create_global_mmlu_task(name=f"filipino_mmlu_mt:{subset}", hf_subset=subset) for subset in MMLU_SUBSETS
+    CustomFilipinoMMLUTask(name=f"filipino_mmlu:{subset}", hf_subset=subset) for subset in FILIPINO_GLOBAL_MMLU_SUBSETS
 ]
