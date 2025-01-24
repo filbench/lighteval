@@ -57,13 +57,13 @@ def filipino_global_mmlu_pfn(line, task_name: str = None) -> Doc:
     choices = []
     valid_keys = []
 
-    for idx, key in enumerate(["a", "b", "c", "d", "e"]):
-        option = line.get(f"option_{idx + 1}")
+    for key in ["a", "b", "c", "d", "e"]:
+        option = line.get(f"option_{key}")
         if option:
             choices.append(option)
             valid_keys.append(key)
 
-    answer_index = valid_keys.index(str(line["answer"]).upper())
+    answer_index = valid_keys.index(str(line["answer"]).lower())
     query = f"{instruction}{line['question']}\n"
     query += "".join([f"{key}. {choice}\n" for key, choice in zip(valid_keys, choices)])
     query += "Sagot:"
@@ -91,5 +91,6 @@ FILIPINO_GLOBAL_MMLU_SUBSETS = [
 
 
 FILIPINO_GLOBAL_MMLU_TASKS = [
-    CustomFilipinoMMLUTask(name=f"filipino_mmlu:{subset}", hf_subset=subset) for subset in FILIPINO_GLOBAL_MMLU_SUBSETS
+    CustomFilipinoMMLUTask(name=f"filipino_mmlu:{subset}", hf_subset=subset)
+    for subset in FILIPINO_GLOBAL_MMLU_SUBSETS
 ]
