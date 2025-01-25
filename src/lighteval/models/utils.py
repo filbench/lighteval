@@ -53,7 +53,7 @@ def _get_dtype(dtype: Union[str, torch.dtype, None], config: Optional[AutoConfig
             return dtype
 
     if config is not None:
-        return config.dtype
+        return config.torch_dtype
 
     return None
 
