@@ -1,3 +1,93 @@
+# FilBench: An OpenLLM Leaderboard for Filipino
+
+This repository contains the implementation for FilBench, an OpenLLM Leaderboard and Evaluation Suite for Filipino.
+It is a fork of HuggingFace's [lighteval](https://github.com/huggingface/lighteval) library, with new Filipino-focused benchmarks implemented under the hood.
+
+## ⌛ Set-up and Installation
+
+First, clone the repository and install all dependencies:
+
+```sh
+git clone git@github.com:filbench/lighteval.git
+# Create a virtualenv
+python3 -m venv venv
+pip install -e .[dev]
+```
+
+If you're developing FilBench, we encourage installing a pre-commit hook:
+
+```sh
+pre-commit install
+pre-commit run --all-files
+```
+
+## 🔎 Inspecting a task
+
+FilBench contains a suite of evaluation benchmarks from a variety of Filipino datasets.
+They are in the following format `filbench|{task_name}|{few_shot}|{truncate_few_shots}`
+You can find all tasks in the [examples/tasks/all_filbench_tasks.txt](https://github.com/filbench/lighteval/blob/main/examples/tasks/all_filbench_tasks.txt) file.
+For example, let's inspect the `anatomy` subset of [Global-MMLU](https://huggingface.co/datasets/CohereForAI/Global-MMLU):
+
+```sh
+python -m lighteval tasks inspect "filbench|global_mmlu_all_tgl_mcf:anatomy|0|0" \
+  --num-samples 1 \
+  --custom-tasks community_tasks/filbench_evals.py
+```
+
+Output:
+
+```python
+{ 'choices': [' A', ' B', ' C', ' D'],
+  'ctx': '',
+  'fewshot_sorting_class': None,
+  'gold_index': [0],
+  'instruction': '',
+  'num_asked_few_shots': -1,
+  'num_effective_few_shots': -1,
+  'original_query': '',
+  'query': 'Tanong: Ang isang sugat na nagdudulot ng compression ng facial '
+           'nerve sa stylomastoid foramen ay magdudulot ng ipsilateral\n'
+           ' A. Paralysis ng facial muscles.\n'
+           ' B. Paralysis ng facial muscles at pagkawala ng panlasa.\n'
+           ' C. Paralysis ng facial muscles, pagkawala ng lasa at '
+           'lacrimation.\n'
+           ' D. Paralysis ng facial muscles, pagkawala ng lasa, lacrimation at '
+           'pagbaba ng salivation.\n'
+           'Sagot:',
+  'specific': None,
+  'task_name': 'filbench|global_mmlu_all_tgl_mcf:anatomy',
+  'unconditioned_query': 'Sagot:'}
+```
+
+> [!TIP]
+> Always remember to pass `community_tasks/filbench_evals.py` in the `--custom-tasks` parameter. In addition, running all commands as a module (i.e., using `python -m lighteval` instead of `lighteval`) solves some pathing or weird errors.
+
+You can also check all tasks available in `filbench` (and all of `lighteval`) via this command:
+
+```sh
+# Saves all tasks in a file called `all_tasks.txt`
+python -m lighteval tasks inspect list --custom-tasks community_tasks/filbench_evals.py > all_tasks.txt
+```
+
+## ▶️ Running a task
+
+Please check `lighteval`'s [official documentation on running tasks](https://huggingface.co/docs/lighteval/quicktour).
+Nothing much differs except that all of FilBench's tasks are registered in the `filbench` suite.
+
+## 🆕 Implementing a new task
+
+Our structure differs quite a bit from the community tasks in `lighteval`. 
+Specifically, we implement **one task per file** in the `filbench/` directory.
+This helps a lot in organization and for multiple people working on different benchmarks at the same time.
+
+1. Implement the task as a new file in the `filbench/` directory. Check if there are similar implementations in the existing tasks in `lighteval`. By default, we follow their implementations to ensure that we're consistent with existing benchmarks. You can check all existing implementations in the `filbench/` directory as reference.
+2. Add the task in the `TASK_TABLE` constant in the `community_tasks/filbench_evals.py` file. This file is our main entrypoint for running evaluations.
+3. Ensure that nothing is amiss&mdash; inspect the task using `python -m lighteval tasks inspect` to examine a single sample.
+4. If everything looks good, add the task string, i.e., `filbench|{task_name}|{few_shot}|{truncate_few_shots}` in the `examples/tasks/all_filbench_tasks.txt` file.
+
+
+---
+
 <p align="center">
   <br/>
     <img alt="lighteval library logo" src="./assets/lighteval-doc.svg" width="376" height="59" style="max-width: 100%;">
