@@ -32,6 +32,7 @@ polarity classes: Positive, Neutral, and Negative.
 Paper link: https://link.springer.com/chapter/10.1007/978-981-99-8349-0_11
 Dataset link: https://huggingface.co/datasets/ccosme/FiReCS
 """
+from collections import OrderedDict
 
 from lighteval.metrics.metrics import Metrics
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
@@ -40,11 +41,13 @@ from lighteval.tasks.requests import Doc
 
 def filipino_firecs_pfn(line, task_name: str = None) -> Doc:
     instruction = "Ano ang damdamin o sentimyento ng sumusunod na pangungusap. Piliin ang tamang sagot:\n\n"
-    choices: dict[str, str] = {
-        "A": "Ito ay isang negatibong opinyon.",
-        "B": "Ito ay isang neutral na opinyon.",
-        "C": "Ito ay isang positibong opinyon.",
-    }
+    choices: dict[str, str] = OrderedDict(
+        {
+            "A": "Ito ay isang negatibong opinyon.",
+            "B": "Ito ay isang neutral na opinyon.",
+            "C": "Ito ay isang positibong opinyon.",
+        }
+    )
 
     answer_index = int(line.get("label"))
     query = f"{instruction}{line['review']}\n"
