@@ -91,6 +91,5 @@ FILIPINO_GLOBAL_MMLU_SUBSETS = [
 
 
 FILIPINO_GLOBAL_MMLU_TASKS = [
-    CustomFilipinoMMLUTask(name=f"filipino_mmlu:{subset}", hf_subset=subset)
-    for subset in FILIPINO_GLOBAL_MMLU_SUBSETS
+    CustomFilipinoMMLUTask(name=f"filipino_mmlu:{subset}", hf_subset=subset) for subset in FILIPINO_GLOBAL_MMLU_SUBSETS
 ]
