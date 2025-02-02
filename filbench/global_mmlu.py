@@ -22,9 +22,13 @@
 
 # ruff: noqa: F405, F403, F401
 """
-Custom evaluation tasks for lighteval.
+Global MMLU is an improved MMLU with evaluation coverage across 42 languages --
+with improved overall quality by engaging with compensated professional and
+community annotators to verify translation quality while also rigorously
+evaluating cultural biases present in the original dataset.
 
-This file generally creates just a TASKS_TABLE and TASKS_GROUPS which are then imported by LightEval.
+Paper link: https://arxiv.org/abs/2412.03304
+Dataset link: https://huggingface.co/datasets/CohereForAI/Global-MMLU
 """
 
 from lighteval.metrics.metrics import Metrics
