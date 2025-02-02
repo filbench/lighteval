@@ -103,7 +103,7 @@ def fil_sib200_pfn_factory(lang_code: str) -> Callable:
             }
         )
 
-        answer_index = list(choices.values()).index(line.get("label"))
+        answer_index = list(choices.values()).index(line.get("category"))
         query = f"{instruction}{line['text']}\n"
         query += "".join([f"{key}. {eng_to_fil[choice]}\n" for key, choice in choices.items()])
         query += answer_text
