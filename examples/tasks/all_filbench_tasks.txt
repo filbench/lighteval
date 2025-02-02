@@ -1,3 +1,6 @@
+filbench|newsphnli_mcf
+filbench|newsphnli_cf
+filbench|newsphnli_hybrid
 filbench|belebele_ceb_Latn_mcf
 filbench|belebele_tgl_Latn_mcf
 filbench|filipino_sib200:ceb
