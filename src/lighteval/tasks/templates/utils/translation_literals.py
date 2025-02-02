@@ -853,7 +853,20 @@ TRANSLATION_LITERALS: dict[Language, TranslationLiterals] = {
         colon=":",
         semicolon=";",
     ),
-    Language.TAGALOG: TranslationLiterals(language=Language.TAGALOG),
+    Language.TAGALOG: TranslationLiterals(
+        language=Language.TAGALOG,
+        question_word="tanong",
+        answer="sagot",
+        confirmation_word="tama ba",
+        yes="Oo",
+        no="Hindi",
+        cause_word="dahil",
+        effect_word="kaya",
+        or_word="o",
+        true="totoo",
+        false="hindi totoo",
+        neither="wala",
+    ),
     Language.TAJIK: TranslationLiterals(language=Language.TAJIK),
     Language.TAMIL: TranslationLiterals(
         # From https://github.com/EleutherAI/lm-evaluation-harness/blob/0845b588303f1f59af98dd1c5bdbd78a9e75a1e2/lm_eval/tasks/xcopa/utils.py
