@@ -39,24 +39,21 @@ from lighteval.tasks.requests import Doc
 
 
 def filipino_firecs_pfn(line, task_name: str = None) -> Doc:
-    instruction = "Ano ang damdamin o sentimyento ng sumusunod na pangungusap. Piliin ang numero ng tamang sagot:\n\n"
-    choices = []
-    valid_keys = []
-
-    for key in ["0", "1", "2"]:
-        option = line.get(f"sol{key}")
-        if option:
-            choices.append(option)
-            valid_keys.append(key)
+    instruction = "Ano ang damdamin o sentimyento ng sumusunod na pangungusap. Piliin ang tamang sagot:\n\n"
+    choices: dict[str, str] = {
+        "A": "Ito ay isang negatibong opinyon.",
+        "B": "Ito ay isang neutral na opinyon.",
+        "C": "Ito ay isang positibong opinyon.",
+    }
 
     answer_index = int(line.get("label"))
     query = f"{instruction}{line['review']}\n"
-    query += "".join([f"{key}. {choice}\n" for key, choice in zip(valid_keys, choices)])
+    query += "".join([f"{key}. {choice}\n" for key, choice in choices.items()])
     query += "Sagot:"
     return Doc(
         task_name=task_name,
         query=query,
-        choices=valid_keys,
+        choices=list(choices.keys()),
         gold_index=answer_index,
         instruction=instruction,
     )
@@ -67,7 +64,7 @@ FILIPINO_FIRECS_TASK = [
         name="firecs",
         hf_subset="default",
         prompt_function=filipino_firecs_pfn,
-        hf_repo="UD-Filipino/FiReCS",
+        hf_repo="ccosme/FiReCS",
         metric=[Metrics.loglikelihood_acc_norm],
         hf_avail_splits=["test"],
         suite=["filbench"],
