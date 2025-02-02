@@ -29,71 +29,74 @@ evaluating cultural biases present in the original dataset.
 
 Paper link: https://arxiv.org/abs/2412.03304
 Dataset link: https://huggingface.co/datasets/CohereForAI/Global-MMLU
+
+Implementation based on: https://github.com/huggingface/lighteval/blob/d332207bf65d70d3a1fe0538af91565d60cf47dd/src/lighteval/tasks/multilingual/tasks.py#L1716
 """
 
-from lighteval.metrics.metrics import Metrics
+from functools import partial
+
+from langcodes import standardize_tag
+
+from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
+from lighteval.metrics.normalizations import (
+    LogProbCharNorm,
+    LogProbPMINorm,
+    LogProbTokenNorm,
+)
+from lighteval.tasks.default_prompts import LETTER_INDICES
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
-from lighteval.tasks.requests import Doc
-
-
-class CustomFilipinoMMLUTask(LightevalTaskConfig):
-    def __init__(self, name, hf_subset):
-        super().__init__(
-            name=name,
-            hf_subset=hf_subset,
-            prompt_function=filipino_global_mmlu_pfn,
-            hf_repo="UD-Filipino/Global-MMLU-Filipino",
-            metric=[Metrics.loglikelihood_acc_norm],
-            hf_avail_splits=["test"],
-            evaluation_splits=["dev"],
-            few_shots_split=["dev"],
-            few_shots_select="sequential",
-            suite=["filbench"],
-            generation_size=-1,
-            stop_sequence=None,
-            trust_dataset=True,
-            version=0,
-        )
-
-
-def filipino_global_mmlu_pfn(line, task_name: str = None) -> Doc:
-    instruction = "Ang sumusunod na tanong ay isang multiple-choice na tanong. Piliin ang tamang sagot:\n\n"
-    choices = []
-    valid_keys = []
-
-    for key in ["a", "b", "c", "d", "e"]:
-        option = line.get(f"option_{key}")
-        if option:
-            choices.append(option)
-            valid_keys.append(key)
-
-    answer_index = valid_keys.index(str(line["answer"]).lower())
-    query = f"{instruction}{line['question']}\n"
-    query += "".join([f"{key}. {choice}\n" for key, choice in zip(valid_keys, choices)])
-    query += "Sagot:"
-    return Doc(
-        task_name=task_name,
-        query=query,
-        choices=valid_keys,
-        gold_index=answer_index,
-        instruction=instruction,
-    )
-
-
-# fmt: off
-FILIPINO_GLOBAL_MMLU_SUBSETS = [
-    "abstract_algebra", "anatomy", "astronomy", "business_ethics", "clinical_knowledge", "college_biology", "college_chemistry", "college_computer_science",
-    "college_mathematics", "college_medicine", "college_physics", "computer_security", "conceptual_physics", "econometrics", "electrical_engineering",
-    "elementary_mathematics", "formal_logic", "global_facts", "high_school_biology", "high_school_chemistry", "high_school_computer_science",
-    "high_school_european_history", "high_school_geography", "high_school_government_and_politics", "high_school_macroeconomics", "high_school_mathematics",
-    "high_school_microeconomics", "high_school_physics", "high_school_psychology", "high_school_statistics", "high_school_us_history", "high_school_world_history",
-    "human_aging", "human_sexuality", "international_law", "jurisprudence", "logical_fallacies", "machine_learning", "management", "marketing", "medical_genetics",
-    "miscellaneous", "moral_disputes", "moral_scenarios", "nutrition", "philosophy", "prehistory", "professional_accounting", "professional_law",
-    "professional_medicine", "professional_psychology", "public_relations", "security_studies", "sociology", "us_foreign_policy", "virology", "world_religions"
-]
-# fmt: on
+from lighteval.tasks.multilingual.tasks import MMLU_SUBSETS
+from lighteval.tasks.multilingual.utils.task_utils import get_metrics_for_formulation
+from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
+from lighteval.tasks.templates.utils.formulation import (
+    CFFormulation,
+    HybridFormulation,
+    MCFFormulation,
+)
+from lighteval.utils.language import Language
 
 
 FILIPINO_GLOBAL_MMLU_TASKS = [
-    CustomFilipinoMMLUTask(name=f"filipino_mmlu:{subset}", hf_subset=subset) for subset in FILIPINO_GLOBAL_MMLU_SUBSETS
+    LightevalTaskConfig(
+        name=f"global_mmlu_{sensitivity_label.lower()}_{language.value}_{formulation.name.lower()}:{subset}",
+        prompt_function=get_mcq_prompt_function(
+            language,
+            lambda line: {
+                "question": line["question"],
+                "choices": [
+                    line["option_a"],
+                    line["option_b"],
+                    line["option_c"],
+                    line["option_d"],
+                ],
+                "gold_idx": LETTER_INDICES.index(line["answer"]),
+            },
+            formulation=formulation,
+        ),
+        suite=("filbench",),
+        hf_repo="CohereForAI/Global-MMLU",
+        hf_subset=standardize_tag(language.value),
+        evaluation_splits=("test",),
+        few_shots_split="dev",
+        hf_filter=partial(
+            lambda subset, sensitivity_label, x: x["subject"].lower() == subset
+            and (
+                sensitivity_label == "ALL" or sensitivity_label in x["cultural_sensitivity_label"].replace("-", "UNK")
+            ),
+            subset,
+            sensitivity_label,
+        ),
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+    )
+    for subset in MMLU_SUBSETS
+    for language in [Language.TAGALOG]
+    for formulation in [MCFFormulation(), CFFormulation(), HybridFormulation()]
+    for sensitivity_label in ["ALL", "CA", "CS", "UNK"]
 ]
