@@ -65,6 +65,7 @@ FILIPINO_NEWSPH_NLI_TASKS = [
                 loglikelihood_acc_metric(normalization=LogProbCharNorm()),
             ],
         ),
+        trust_dataset=True,
     )
     for formulation in [MCFFormulation(), CFFormulation(), HybridFormulation()]
 ]
