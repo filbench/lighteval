@@ -60,7 +60,7 @@ from lighteval.utils.language import iso_639_3_ind_to_iso_639_3_macro
 
 FILIPINO_BELEBELE_TASKS = [
     LightevalTaskConfig(
-        name=f"belebele_{iso_639_3_ind_to_iso_639_3_macro[LangCodeLanguage.get(language).to_alpha3()]}_{formulation.name.lower()}",
+        name=f"belebele_{LangCodeLanguage.get(language).to_alpha3()}_{formulation.name.lower()}",
         prompt_function=get_mcq_prompt_function(
             iso_639_3_ind_to_iso_639_3_macro[LangCodeLanguage.get(language).to_alpha3()],
             lambda line: {
