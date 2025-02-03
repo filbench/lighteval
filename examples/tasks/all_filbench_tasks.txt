@@ -1,3 +1,11 @@
+filbench|include_tgl_mcf:culturology
+filbench|include_tgl_mcf:history
+filbench|include_tgl_mcf:language
+filbench|include_tgl_mcf:driving_license
+filbench|include_tgl_hybrid:culturology
+filbench|include_tgl_hybrid:history
+filbench|include_tgl_hybrid:language
+filbench|include_tgl_hybrid:driving_license
 filbench|newsphnli_mcf
 filbench|newsphnli_cf
 filbench|newsphnli_hybrid

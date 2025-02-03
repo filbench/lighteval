@@ -31,6 +31,7 @@ Dataset link: https://huggingface.co/datasets/CohereForAI/include-base-44
 
 Implementation based on: https://github.com/huggingface/lighteval/blob/d332207bf65d70d3a1fe0538af91565d60cf47dd/src/lighteval/tasks/multilingual/tasks.py#L1716
 """
+from functools import partial
 
 from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
 from lighteval.metrics.normalizations import (
@@ -38,9 +39,8 @@ from lighteval.metrics.normalizations import (
     LogProbPMINorm,
     LogProbTokenNorm,
 )
-from lighteval.tasks.default_prompts import LETTER_INDIES
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
-from lighteval.tasks.multilingual.utils.task_utils import get_metrics_for_formulations
+from lighteval.tasks.multilingual.utils.task_utils import get_metrics_for_formulation
 from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
 from lighteval.tasks.templates.utils.formulation import (
     HybridFormulation,
@@ -51,27 +51,23 @@ from lighteval.utils.language import Language
 
 FILIPINO_INCLUDE_TASKS = [
     LightevalTaskConfig(
-        name=f"include:{subset}",
+        name=f"include_{language.value}_{formulation.name.lower()}:{subset}",
         prompt_function=get_mcq_prompt_function(
             language,
-            lambda line: (
-                "question": line["question"],
-                "choices": line["choices"],
-                "gold_idx": line["answer"]
-            ),
+            lambda line: {"question": line["question"], "choices": line["choices"], "gold_idx": line["answer"]},
             formulation=formulation,
         ),
-        suite=["filbench"],
+        suite=("filbench",),
         hf_subset="Tagalog",
         hf_repo="CohereForAI/include-base-44",
-        hf_filter=lambda x: x["subject"].replace(" ", "_").lower() == subset,
+        hf_filter=partial(lambda subset, x: x["subject"].replace(" ", "_").lower() == subset, subset),
         metric=get_metrics_for_formulation(
             formulation,
             [
                 loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
                 loglikelihood_acc_metric(normalization=LogProbCharNorm()),
                 loglikelihood_acc_metric(normalization=LogProbPMINorm()),
-            ]
+            ],
         ),
         hf_avail_splits=["test"],
         evaluation_splits=["test"],
@@ -79,9 +75,9 @@ FILIPINO_INCLUDE_TASKS = [
         few_shots_select="random",
         generation_size=-1,
         trust_dataset=True,
-        version=0
+        version=0,
     )
     for subset in ["culturology", "history", "language", "driving_license"]
-    for language in [Language.TAGALOG, ]
+    for language in [Language.TAGALOG]
     for formulation in [MCFFormulation(), HybridFormulation()]
 ]

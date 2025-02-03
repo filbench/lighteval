@@ -30,6 +30,7 @@ This file generally creates just a TASKS_TABLE and TASKS_GROUPS which are then i
 from filbench.belebele import FILIPINO_BELEBELE_TASKS
 from filbench.firecs import FILIPINO_FIRECS_TASK
 from filbench.global_mmlu import FILIPINO_GLOBAL_MMLU_TASKS
+from filbench.include import FILIPINO_INCLUDE_TASKS
 from filbench.newsph_nli import FILIPINO_NEWSPH_NLI_TASKS
 from filbench.sib200 import FILIPINO_SIB_TASKS
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
@@ -41,4 +42,5 @@ TASKS_TABLE: list[LightevalTaskConfig] = (
     + FILIPINO_SIB_TASKS
     + FILIPINO_BELEBELE_TASKS
     + FILIPINO_NEWSPH_NLI_TASKS
+    + FILIPINO_INCLUDE_TASKS
 )
