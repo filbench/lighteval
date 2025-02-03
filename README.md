@@ -1,6 +1,6 @@
-# FilBench: An OpenLLM Leaderboard for Filipino
+# FilBench: An Open LLM Leaderboard for Filipino
 
-This repository contains the implementation for FilBench, an OpenLLM Leaderboard and Evaluation Suite for Filipino.
+This repository contains the implementation for FilBench, an Open LLM Leaderboard and Evaluation Suite for Filipino.
 It is a fork of HuggingFace's [lighteval](https://github.com/huggingface/lighteval) library, with new Filipino-focused benchmarks implemented under the hood.
 
 ## ⌛ Set-up and Installation
