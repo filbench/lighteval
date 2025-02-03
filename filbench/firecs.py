@@ -64,7 +64,7 @@ def filipino_firecs_pfn(line, task_name: str = None) -> Doc:
 
 FILIPINO_FIRECS_TASK = [
     LightevalTaskConfig(
-        name="firecs",
+        name="firecs_fil",
         hf_subset="default",
         prompt_function=filipino_firecs_pfn,
         hf_repo="ccosme/FiReCS",
