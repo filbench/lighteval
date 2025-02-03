@@ -66,7 +66,7 @@ You can also check all tasks available in `filbench` (and all of `lighteval`) vi
 
 ```sh
 # Saves all tasks in a file called `all_tasks.txt`
-python -m lighteval tasks inspect list --custom-tasks community_tasks/filbench_evals.py > all_tasks.txt
+python -m lighteval tasks list --custom-tasks community_tasks/filbench_evals.py > all_tasks.txt
 ```
 
 ## ▶️ Running a task
@@ -76,7 +76,7 @@ Nothing much differs except that all of FilBench's tasks are registered in the `
 
 ## 🆕 Implementing a new task
 
-Our structure differs quite a bit from the community tasks in `lighteval`. 
+Our structure differs quite a bit from the community tasks in `lighteval`.
 Specifically, we implement **one task per file** in the `filbench/` directory.
 This helps a lot in organization and for multiple people working on different benchmarks at the same time.
 
@@ -85,7 +85,6 @@ This helps a lot in organization and for multiple people working on different be
 3. Ensure that nothing is amiss&mdash; inspect the task using `python -m lighteval tasks inspect` to examine a single sample.
 4. If everything looks good, add the task string, i.e., `filbench|{task_name}|{few_shot}|{truncate_few_shots}` in the `examples/tasks/all_filbench_tasks.txt` file.
 
-
 ---
 
 <p align="center">
@@ -93,7 +92,6 @@ This helps a lot in organization and for multiple people working on different be
     <img alt="lighteval library logo" src="./assets/lighteval-doc.svg" width="376" height="59" style="max-width: 100%;">
   <br/>
 </p>
-
 
 <p align="center">
     <i>Your go-to toolkit for lightning-fast, flexible LLM evaluation, from Hugging Face's Leaderboard and Evals Team.</i>
@@ -131,7 +129,6 @@ Customization at your fingertips: letting you either browse all our existing [ta
 Seamlessly experiment, benchmark, and store your results on the Hugging Face
 Hub, S3, or locally.
 
-
 ## 🔑 Key Features
 
 - **Speed**: [Use vllm as backend for fast evals](https://huggingface.co/docs/lighteval/use-vllm-as-backend).
@@ -140,7 +137,6 @@ Hub, S3, or locally.
 - **Python API**: [Simple integration with the Python API](https://huggingface.co/docs/lighteval/using-the-python-api).
 - **Custom Tasks**: [Easily add custom tasks](https://huggingface.co/docs/lighteval/adding-a-custom-task).
 - **Versatility**: Tons of [metrics](https://huggingface.co/docs/lighteval/metric-list) and [tasks](https://huggingface.co/docs/lighteval/available-tasks) ready to go.
-
 
 ## ⚡️ Installation
 
@@ -168,10 +164,10 @@ Lighteval offers two main entry points for model evaluation:
 - `lighteval vllm`: evaluate models on one or more GPUs using [🚀
   VLLM](https://github.com/vllm-project/vllm)
 - `lighteval endpoint`
-    - `inference-endpoint`: evaluate models on one or more GPUs using [🔗
-  Inference Endpoint](https://huggingface.co/inference-endpoints/dedicated)
-    - `tgi`: evaluate models on one or more GPUs using [🔗 Text Generation Inference](https://huggingface.co/docs/text-generation-inference/en/index)
-    - `openai`: evaluate models on one or more GPUs using [🔗 OpenAI API](https://platform.openai.com/)
+  - `inference-endpoint`: evaluate models on one or more GPUs using [🔗
+    Inference Endpoint](https://huggingface.co/inference-endpoints/dedicated)
+  - `tgi`: evaluate models on one or more GPUs using [🔗 Text Generation Inference](https://huggingface.co/docs/text-generation-inference/en/index)
+  - `openai`: evaluate models on one or more GPUs using [🔗 OpenAI API](https://platform.openai.com/)
 
 Here’s a quick command to evaluate using the Accelerate backend:
 
@@ -209,6 +205,7 @@ pip install -e .[dev]
 pre-commit install
 pre-commit run --all-files
 ```
+
 ## 📜 Citation
 
 ```bibtex
