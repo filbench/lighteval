@@ -40,7 +40,7 @@ from lighteval.utils.language import Language
 
 FILIPINO_NEWSPH_NLI_TASKS = [
     LightevalTaskConfig(
-        name=f"newsphnli_{formulation.name.lower()}",
+        name=f"newsphnli_fil_{formulation.name.lower()}",
         suite=["filbench"],
         prompt_function=get_nli_prompt_function(
             language=Language.TAGALOG,

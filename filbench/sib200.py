@@ -119,5 +119,5 @@ def fil_sib200_pfn_factory(lang_code: str) -> Callable:
 
 
 FILIPINO_SIB_TASKS = [
-    CustomFilipinoSIBTask(name=f"filipino_sib200:{lang_code}", lang_code=lang_code) for lang_code in ("tgl", "ceb")
+    CustomFilipinoSIBTask(name=f"sib200_{lang_code}", lang_code=lang_code) for lang_code in ("tgl", "ceb")
 ]
