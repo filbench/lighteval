@@ -25,11 +25,7 @@
 from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
 from lighteval.metrics.normalizations import LogProbCharNorm, LogProbTokenNorm
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
-from lighteval.tasks.multilingual.utils.task_utils import get_metrics_for_formulation
 from lighteval.tasks.requests import Doc
-from lighteval.tasks.templates.nli import get_nli_prompt_function
-from lighteval.tasks.templates.utils.formulation import CFFormulation
-from lighteval.utils.language import Language
 
 
 def kalahi_prompt_function(line: dict, task_name: str) -> Doc | None:
@@ -44,7 +40,7 @@ def kalahi_prompt_function(line: dict, task_name: str) -> Doc | None:
 
 FILIPINO_KALAHI_TASKS = [
     LightevalTaskConfig(
-        name="kalahi",
+        name="kalahi_tgl_mc1",
         suite=["filbench"],
         prompt_function=kalahi_prompt_function,
         hf_repo="aisingapore/kalahi",
