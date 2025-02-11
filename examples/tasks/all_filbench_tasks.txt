@@ -1,3 +1,8 @@
+filbench|dengue_filipino_fil:absent
+filbench|dengue_filipino_fil:dengue
+filbench|dengue_filipino_fil:health
+filbench|dengue_filipino_fil:mosquito
+filbench|dengue_filipino_fil:sick
 filbench|include_tgl_mcf:culturology
 filbench|include_tgl_mcf:history
 filbench|include_tgl_mcf:language

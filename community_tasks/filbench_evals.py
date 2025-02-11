@@ -28,6 +28,7 @@ This file generally creates just a TASKS_TABLE and TASKS_GROUPS which are then i
 """
 
 from filbench.belebele import FILIPINO_BELEBELE_TASKS
+from filbench.dengue_filipino import FILIPINO_DENGUE_TASKS
 from filbench.firecs import FILIPINO_FIRECS_TASK
 from filbench.global_mmlu import FILIPINO_GLOBAL_MMLU_TASKS
 from filbench.include import FILIPINO_INCLUDE_TASKS
@@ -43,4 +44,5 @@ TASKS_TABLE: list[LightevalTaskConfig] = (
     + FILIPINO_BELEBELE_TASKS
     + FILIPINO_NEWSPH_NLI_TASKS
     + FILIPINO_INCLUDE_TASKS
+    + FILIPINO_DENGUE_TASKS
 )
