@@ -42,6 +42,7 @@ class TranslationLiterals:
     cause_word: str = None  # type: ignore
     effect_word: str = None  # type: ignore
     or_word: str = None  # type: ignore
+    and_word: str = None  # type: ignore
 
     # NLI
     true: str = None  # type: ignore
@@ -91,6 +92,7 @@ TRANSLATION_LITERALS: dict[Language, TranslationLiterals] = {
         false="خاطئ",
         neither="لا هذا ولا ذاك",
         or_word="أو",
+        and_word="و",
         full_stop=".",
         comma="،",
         question_mark="؟",
@@ -230,6 +232,7 @@ TRANSLATION_LITERALS: dict[Language, TranslationLiterals] = {
         false="假",
         neither="都不是",
         or_word="或",
+        and_word="和",
         full_stop="。",
         comma="，",
         question_mark="？",
@@ -331,6 +334,7 @@ TRANSLATION_LITERALS: dict[Language, TranslationLiterals] = {
         sentence_space=" ",
         colon=":",
         or_word="or",
+        and_word="and",
     ),
     Language.ESPERANTO: TranslationLiterals(language=Language.ESPERANTO),
     Language.ESTONIAN: TranslationLiterals(
@@ -373,6 +377,7 @@ TRANSLATION_LITERALS: dict[Language, TranslationLiterals] = {
         cause_word="parce que",
         effect_word="donc",
         or_word="ou",
+        and_word="et",
         true="vrai",
         false="faux",
         neither="aucun des deux",
@@ -476,6 +481,7 @@ TRANSLATION_LITERALS: dict[Language, TranslationLiterals] = {
         false="असत्य",
         neither="न तो यह, न वह",
         or_word="या",
+        and_word="और",
         full_stop="।",
         comma=",",
         question_mark="?",
