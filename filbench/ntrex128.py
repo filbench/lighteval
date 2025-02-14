@@ -22,7 +22,8 @@
 
 # ruff: noqa: F405, F403, F401
 """
-The NTREX-128 dataset contains English news headlines and stories originally
+The News Text References for MT Evaluation of 128 languages (NTREX-128)
+dataset contains English news headlines and stories originally
 released in WMT19 and translated into 128 target languages including Filipino.
 Translations were validated by bilingual annotators who were native speakers
 of the respective target language.
@@ -39,7 +40,7 @@ from lighteval.tasks.templates.utils.formulation import CFFormulation
 from lighteval.utils.language import Language, iso_639_3_ind_to_iso_639_3_macro
 
 
-FILIPINO_NTREX_TASKS = [
+FILIPINO_NTREX_TASKs = [
     LightevalTaskConfig(
         name=f"ntrex128_{LangCodeLanguage.get(language).to_alpha3()}",
         prompt_function=get_translation_prompt_function(
@@ -56,7 +57,7 @@ FILIPINO_NTREX_TASKS = [
         evaluation_splits=["test"],
         few_shots_split=None,
         few_shots_select=None,
-        generation_size=500,
+        generation_size=50,
         trust_dataset=True,
         version=0,
     )
