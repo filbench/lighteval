@@ -40,7 +40,7 @@ from lighteval.tasks.templates.utils.formulation import CFFormulation
 from lighteval.utils.language import Language, iso_639_3_ind_to_iso_639_3_macro
 
 
-FILIPINO_NTREX_TASKs = [
+FILIPINO_NTREX_TASK = [
     LightevalTaskConfig(
         name=f"ntrex128_{LangCodeLanguage.get(language).to_alpha3()}",
         prompt_function=get_translation_prompt_function(
