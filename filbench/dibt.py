@@ -43,12 +43,14 @@ FILIPINO_DIBT_TASKS = [
             target_language=Language.TAGALOG,
             adapter=lambda line: {
                 "source_text": line["source"],
-                "target_text": [entry["value"] for entry in line["target"]],
+                "target_text": [entry["value"] for entry in line["target"]] + [line["target-suggestion"]],
+                "gold_idx": list(range(len(line["target"]))),
             },
             formulation=CFFormulation(),
         ),
         suite=("filbench",),
-        hf_repo="data-is-better-together/MPEP_FILIPINO",
+        hf_repo="DIBT/MPEP_FILIPINO",
+        hf_subset="default",
         metric=[
             Metrics.rougeL,
             Metrics.bleu,
