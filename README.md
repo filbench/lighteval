@@ -73,6 +73,7 @@ python -m lighteval tasks list --custom-tasks community_tasks/filbench_evals.py 
 
 Please check `lighteval`'s [official documentation on running tasks](https://huggingface.co/docs/lighteval/quicktour).
 Nothing much differs except that all of FilBench's tasks are registered in the `filbench` suite.
+Use `python -m lighteval` instead of just `lighteval`.
 
 ## 🆕 Implementing a new task
 

@@ -32,6 +32,7 @@ from filbench.dengue_filipino import FILIPINO_DENGUE_TASKS
 from filbench.firecs import FILIPINO_FIRECS_TASK
 from filbench.global_mmlu import FILIPINO_GLOBAL_MMLU_TASKS
 from filbench.include import FILIPINO_INCLUDE_TASKS
+from filbench.kalahi import FILIPINO_KALAHI_TASKS
 from filbench.newsph_nli import FILIPINO_NEWSPH_NLI_TASKS
 from filbench.ntrex128 import FILIPINO_NTREX_TASK
 from filbench.sib200 import FILIPINO_SIB_TASKS
@@ -49,4 +50,5 @@ TASKS_TABLE: list[LightevalTaskConfig] = (
     + FILIPINO_DENGUE_TASKS
     + FILIPINO_NTREX_TASK
     + FILIPINO_TICO19_TASKS
+    + FILIPINO_KALAHI_TASKS
 )
