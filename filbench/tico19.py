@@ -72,5 +72,6 @@ FILIPINO_TICO19_TASKS = [
         few_shots_split=["validation"],
         few_shots_select="random",
         trust_dataset=True,
+        generation_size=64,
     )
 ]
