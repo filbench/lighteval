@@ -78,4 +78,5 @@ filbench|global_mmlu_all_tgl_mcf:sociology
 filbench|global_mmlu_all_tgl_mcf:us_foreign_policy
 filbench|global_mmlu_all_tgl_mcf:virology
 filbench|global_mmlu_all_tgl_mcf:world_religions
-filbench|kalahi_tgl_mc1
+filbench|kalahi_tgl_mcf
+filbench|kalahi_tgl_hybrid

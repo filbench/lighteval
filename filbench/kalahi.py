@@ -24,7 +24,6 @@
 
 from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
 from lighteval.metrics.normalizations import LogProbCharNorm, LogProbTokenNorm
-from lighteval.tasks.default_prompts import LETTER_INDICES
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
 from lighteval.tasks.requests import Doc
 from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
@@ -37,14 +36,14 @@ from lighteval.utils.language import Language
 
 FILIPINO_KALAHI_TASKS = [
     LightevalTaskConfig(
-        name="kalahi_tgl_mc1",
+        name=f"kalahi_tgl_{formulation.name.lower()}",
         suite=["filbench"],
         prompt_function=get_mcq_prompt_function(
             language=Language.TAGALOG,
             adapter=lambda line: {
                 "question": line["prompt"],
                 "choices": [line["best_answer"]] + line["irrelevant_answers"],
-                "gold_idx": LETTER_INDICES.index(0),
+                "gold_idx": 0,
             },
             formulation=formulation,
         ),
@@ -57,5 +56,5 @@ FILIPINO_KALAHI_TASKS = [
             loglikelihood_acc_metric(normalization=LogProbCharNorm()),
         ],
     )
-    for formulation in [HybridFormulation, MCFFormulation]
+    for formulation in [HybridFormulation(), MCFFormulation()]
 ]
