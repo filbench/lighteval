@@ -22,33 +22,43 @@
 
 # ruff: noqa: F405, F403, F401
 """
-Custom evaluation tasks for lighteval.
+Manually annotated translation dataset for English to Tagalog (Filipino) from the
+FilBench team.
 
-This file generally creates just a TASKS_TABLE and TASKS_GROUPS which are then imported by LightEval.
+Dataset link: https://huggingface.co/datasets/gmnlp/tico19/viewer/en-tl
 """
 
-from filbench.belebele import FILIPINO_BELEBELE_TASKS
-from filbench.dengue_filipino import FILIPINO_DENGUE_TASKS
-from filbench.dibt import FILIPINO_DIBT_TASKS
-from filbench.firecs import FILIPINO_FIRECS_TASK
-from filbench.global_mmlu import FILIPINO_GLOBAL_MMLU_TASKS
-from filbench.include import FILIPINO_INCLUDE_TASKS
-from filbench.newsph_nli import FILIPINO_NEWSPH_NLI_TASKS
-from filbench.ntrex128 import FILIPINO_NTREX_TASK
-from filbench.sib200 import FILIPINO_SIB_TASKS
-from filbench.tico19 import FILIPINO_TICO19_TASKS
+from lighteval.metrics.metrics import Metrics
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
+from lighteval.tasks.templates.translation import get_translation_prompt_function
+from lighteval.tasks.templates.utils.formulation import CFFormulation
+from lighteval.utils.language import Language
 
 
-TASKS_TABLE: list[LightevalTaskConfig] = (
-    FILIPINO_GLOBAL_MMLU_TASKS
-    + FILIPINO_FIRECS_TASK
-    + FILIPINO_SIB_TASKS
-    + FILIPINO_BELEBELE_TASKS
-    + FILIPINO_NEWSPH_NLI_TASKS
-    + FILIPINO_INCLUDE_TASKS
-    + FILIPINO_DENGUE_TASKS
-    + FILIPINO_NTREX_TASK
-    + FILIPINO_TICO19_TASKS
-    + FILIPINO_DIBT_TASKS
-)
+FILIPINO_DIBT_TASKS = [
+    LightevalTaskConfig(
+        name="dibt_translation_tgl",
+        prompt_function=get_translation_prompt_function(
+            source_language=Language.ENGLISH,
+            target_language=Language.TAGALOG,
+            adapter=lambda line: {
+                "source_text": line["source"],
+                "target_text": line["target"][0]["value"],
+            },
+            formulation=CFFormulation(),
+        ),
+        suite=("filbench",),
+        hf_repo="DIBT/MPEP_FILIPINO",
+        hf_subset="default",
+        metric=[
+            Metrics.rougeL,
+            Metrics.bleu,
+            Metrics.bleurt,
+            Metrics.chrf,
+            Metrics.ter,
+        ],
+        evaluation_splits=["train"],
+        trust_dataset=True,
+        generation_size=1,
+    )
+]
