@@ -43,8 +43,7 @@ FILIPINO_DIBT_TASKS = [
             target_language=Language.TAGALOG,
             adapter=lambda line: {
                 "source_text": line["source"],
-                "target_text": [entry["value"] for entry in line["target"]] + [line["target-suggestion"]],
-                "gold_idx": list(range(len(line["target"]))),
+                "target_text": line["target"][0]["value"],
             },
             formulation=CFFormulation(),
         ),
@@ -60,6 +59,6 @@ FILIPINO_DIBT_TASKS = [
         ],
         evaluation_splits=["train"],
         trust_dataset=True,
-        generation_size=64,
+        generation_size=1,
     )
 ]
