@@ -1,3 +1,5 @@
+filbench|tatoeba_ceb
+filbench|tatoeba_tgl
 filbench|ntrex128_fil
 filbench|tico19_tgl
 filbench|dengue_filipino_fil:absent
