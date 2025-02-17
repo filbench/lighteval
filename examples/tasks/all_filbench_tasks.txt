@@ -1,4 +1,5 @@
 filbench|ntrex128_fil
+filbench|tico19_tgl
 filbench|dengue_filipino_fil:absent
 filbench|dengue_filipino_fil:dengue
 filbench|dengue_filipino_fil:health

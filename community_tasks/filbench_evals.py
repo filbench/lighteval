@@ -35,6 +35,7 @@ from filbench.include import FILIPINO_INCLUDE_TASKS
 from filbench.newsph_nli import FILIPINO_NEWSPH_NLI_TASKS
 from filbench.ntrex128 import FILIPINO_NTREX_TASK
 from filbench.sib200 import FILIPINO_SIB_TASKS
+from filbench.tico19 import FILIPINO_TICO19_TASKS
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
 
 
@@ -47,4 +48,5 @@ TASKS_TABLE: list[LightevalTaskConfig] = (
     + FILIPINO_INCLUDE_TASKS
     + FILIPINO_DENGUE_TASKS
     + FILIPINO_NTREX_TASK
+    + FILIPINO_TICO19_TASKS
 )
