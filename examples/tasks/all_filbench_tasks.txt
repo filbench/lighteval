@@ -2,6 +2,8 @@ filbench|stingraybench_correctness_tgl_hybrid
 filbench|stingraybench_correctness_tgl_mcf
 filbench|stingraybench_semantic_appropriateness_tgl_hybrid
 filbench|stingraybench_semantic_appropriateness_tgl_mcf
+filbench|tatoeba_ceb
+filbench|tatoeba_tgl
 filbench|ntrex128_fil
 filbench|tico19_tgl
 filbench|dengue_filipino_fil:absent
