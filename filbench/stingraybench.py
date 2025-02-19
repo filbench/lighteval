@@ -74,7 +74,7 @@ FILIPINO_STINGRAY_CORRECTNESS_TASKS = [
     LightevalTaskConfig(
         name=f"stingraybench_correctness_tgl_{formulation.name.lower()}",
         prompt_function=get_mcq_prompt_function(
-            Language.TAGALOG,
+            Language.ENGLISH,  # the orig instruction is in English, so we replicate it.
             adapter=prepare_stingray_correctness,
             formulation=formulation,
         ),
@@ -104,7 +104,7 @@ FILIPINO_STINGRAY_SEMANTIC_TAKS = [
     LightevalTaskConfig(
         name=f"stingraybench_semantic_appropriateness_tgl_{formulation.name.lower()}",
         prompt_function=get_mcq_prompt_function(
-            Language.TAGALOG,
+            Language.ENGLISH,  # the orig instruction is in English, so we replicate it.
             adapter=prepare_stingray_semantic_appropriateness,
             formulation=formulation,
         ),
