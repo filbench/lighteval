@@ -1,3 +1,4 @@
+filbench|seaifeval_tgl
 filbench|tatoeba_ceb
 filbench|tatoeba_tgl
 filbench|ntrex128_fil
