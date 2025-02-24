@@ -1,3 +1,4 @@
+filbench|seaifeval_tgl
 filbench|stingraybench_correctness_tgl_hybrid
 filbench|stingraybench_correctness_tgl_mcf
 filbench|stingraybench_semantic_appropriateness_tgl_hybrid

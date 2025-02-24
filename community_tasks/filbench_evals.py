@@ -34,6 +34,7 @@ from filbench.global_mmlu import FILIPINO_GLOBAL_MMLU_TASKS
 from filbench.include import FILIPINO_INCLUDE_TASKS
 from filbench.newsph_nli import FILIPINO_NEWSPH_NLI_TASKS
 from filbench.ntrex128 import FILIPINO_NTREX_TASK
+from filbench.sea_ifeval import FILIPINO_SEAIFEVAL_TASKS
 from filbench.sib200 import FILIPINO_SIB_TASKS
 from filbench.stingraybench import FILIPINO_STINGRAY_TASKS
 from filbench.tatoeba import FILIPINO_TATOEBA_TASKS
@@ -53,4 +54,5 @@ TASKS_TABLE: list[LightevalTaskConfig] = (
     + FILIPINO_TICO19_TASKS
     + FILIPINO_STINGRAY_TASKS
     + FILIPINO_TATOEBA_TASKS
+    + FILIPINO_SEAIFEVAL_TASKS
 )
