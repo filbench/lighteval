@@ -29,7 +29,8 @@ filbench|sib200_ceb_hybrid
 filbench|sib200_tgl_hybrid
 filbench|sib200_ceb_mcf
 filbench|sib200_tgl_mcf
-filbench|firecs_fil
+filbench|firecs_fil_hybrid
+filbench|firecs_fil_mcf
 filbench|global_mmlu_all_tgl_mcf:abstract_algebra
 filbench|global_mmlu_all_tgl_mcf:anatomy
 filbench|global_mmlu_all_tgl_mcf:astronomy
