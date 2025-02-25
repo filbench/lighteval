@@ -64,6 +64,7 @@ FILIPINO_TLUNIFIED_NER_TASK = [
                 "choices": CHOICES,
                 "gold_idx": ANSWER_IDX.index(line["answer"]),
             },
+            formulation=formulation,
         ),
         hf_repo="ljvmiranda921/tlunified-ner",
         hf_avail_splits=["test"],
