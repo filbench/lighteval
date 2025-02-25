@@ -32,43 +32,45 @@ polarity classes: Positive, Neutral, and Negative.
 Paper link: https://link.springer.com/chapter/10.1007/978-981-99-8349-0_11
 Dataset link: https://huggingface.co/datasets/ccosme/FiReCS
 """
-from collections import OrderedDict
-
-from lighteval.metrics.metrics import Metrics
+from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
+from lighteval.metrics.normalizations import (
+    LogProbCharNorm,
+    LogProbPMINorm,
+    LogProbTokenNorm,
+)
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
-from lighteval.tasks.requests import Doc
+from lighteval.tasks.multilingual.utils.task_utils import get_metrics_for_formulation
+from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
+from lighteval.tasks.templates.utils.formulation import (
+    HybridFormulation,
+    MCFFormulation,
+)
+from lighteval.utils.language import Language
 
 
-def filipino_firecs_pfn(line, task_name: str = None) -> Doc:
-    instruction = "Ano ang damdamin o sentimyento ng sumusunod na pangungusap. Piliin ang tamang sagot:\n\n"
-    choices: dict[str, str] = OrderedDict(
-        {
-            "A": "Ito ay isang negatibong opinyon.",
-            "B": "Ito ay isang neutral na opinyon.",
-            "C": "Ito ay isang positibong opinyon.",
-        }
-    )
-
-    answer_index = int(line.get("label"))
-    query = f"{instruction}{line['review']}\n"
-    query += "".join([f"{key}. {choice}\n" for key, choice in choices.items()])
-    query += "Sagot:"
-    return Doc(
-        task_name=task_name,
-        query=query,
-        choices=list(choices.keys()),
-        gold_index=answer_index,
-        instruction=instruction,
-    )
-
+CHOICES = ["Negatibo", "Neutral", "Positibo"]
 
 FILIPINO_FIRECS_TASK = [
     LightevalTaskConfig(
-        name="firecs_fil",
+        name=f"firecs_fil_{formulation.name.lower()}",
         hf_subset="default",
-        prompt_function=filipino_firecs_pfn,
+        prompt_function=get_mcq_prompt_function(
+            Language.TAGALOG,
+            lambda line: {
+                "question": f"Ano ang damdamin o sentimiyento ng sumusunod na pangungusap: {line['review']}",
+                "choices": CHOICES,
+                "gold_idx": int(line["label"]),
+            },
+        ),
         hf_repo="ccosme/FiReCS",
-        metric=[Metrics.loglikelihood_acc_norm],
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
         hf_avail_splits=["train", "test"],
         evaluation_splits=["train"],
         few_shots_split="train",
@@ -78,4 +80,5 @@ FILIPINO_FIRECS_TASK = [
         trust_dataset=True,
         version=0,
     )
+    for formulation in [MCFFormulation(), HybridFormulation()]
 ]

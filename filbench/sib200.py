@@ -29,95 +29,75 @@ Paper link: https://aclanthology.org/2024.eacl-long.14/
 Dataset link: https://huggingface.co/datasets/Davlan/sib200
 """
 
-from collections import OrderedDict
-from typing import Callable
-
-from lighteval.metrics.metrics import Metrics
+from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
+from lighteval.metrics.normalizations import (
+    LogProbCharNorm,
+    LogProbPMINorm,
+    LogProbTokenNorm,
+)
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
-from lighteval.tasks.requests import Doc
+from lighteval.tasks.multilingual.utils.task_utils import get_metrics_for_formulation
+from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
+from lighteval.tasks.templates.utils.formulation import (
+    HybridFormulation,
+    MCFFormulation,
+)
+from lighteval.utils.language import Language
 
 
-class CustomFilipinoSIBTask(LightevalTaskConfig):
-    def __init__(self, name, lang_code):
-        super().__init__(
-            name=name,
-            hf_subset=f"{lang_code}_Latn",
-            prompt_function=fil_sib200_pfn_factory(lang_code),
-            hf_repo="Davlan/sib200",
-            metric=[Metrics.loglikelihood_acc_norm],
-            hf_avail_splits=["test", "validation"],
-            evaluation_splits=["validation"],
-            few_shots_split=["validation"],
-            few_shots_select="sequential",
-            suite=["filbench"],
-            generation_size=-1,
-            stop_sequence=None,
-            trust_dataset=True,
-            version=0,
-        )
+CHOICES = [
+    "geography",
+    "science/technology",
+    "entertainment",
+    "travel",
+    "sports",
+    "health",
+    "politics",
+]
 
 
-def fil_sib200_pfn_factory(lang_code: str) -> Callable:
-    if lang_code == "tgl":
-        instruction = "Tungkol saan ang sumusunod na pangungusap? Piliin ang tamang sagot:\n\n"
-        answer_text = "Sagot:"
-    elif lang_code == "ceb":
-        instruction = "Mahitungod sa unsa ang mosunod nga teksto? Pilia ang saktong tubag:\n\n"
-        answer_text = "Tubag:"
-    else:
-        raise ValueError(f"Unknown lang_code {lang_code}")
+def get_instruction(language: Language) -> str:
+    if language == Language.CEBUANO:
+        return "Mahitungod sa unsa ang mosunod nga teksto?\n"
+    if language == Language.TAGALOG:
+        return "Tungkol saan ang sumusunod na pangungusap?\n"
 
-    translation = {
-        "tgl": {
-            "geography": "heograpiya",
-            "science/technology": "agham/teknolohiya",
-            "entertainment": "libangan",
-            "travel": "pagbiyahe",
-            "sports": "isports",
-            "health": "kalusugan",
-            "politics": "politika",
-        },
-        "ceb": {
-            "geography": "heograpiya",
-            "science/technology": "agham/teknolohiya",
-            "entertainment": "kalingawan",
-            "travel": "pagbiyahe",
-            "sports": "isports",
-            "health": "panglawas",
-            "politics": "politika",
-        },
-    }
 
-    eng_to_fil = translation[lang_code]
-
-    def fil_sib200_pfn(line, task_name: str = None) -> Doc:
-        choices: dict[str, str] = OrderedDict(
-            {
-                "A": "geography",
-                "B": "science/technology",
-                "C": "entertainment",
-                "D": "travel",
-                "E": "sports",
-                "F": "health",
-                "G": "politics",
-            }
-        )
-
-        answer_index = list(choices.values()).index(line.get("category"))
-        query = f"{instruction}{line['text']}\n"
-        query += "".join([f"{key}. {eng_to_fil[choice]}\n" for key, choice in choices.items()])
-        query += answer_text
-        return Doc(
-            task_name=task_name,
-            query=query,
-            choices=list(choices.keys()),
-            gold_index=answer_index,
-            instruction=instruction,
-        )
-
-    return fil_sib200_pfn
+def create_task(language: Language, formulation):
+    return LightevalTaskConfig(
+        name=f"sib200_{language.value}_{formulation.name.lower()}",
+        prompt_function=get_mcq_prompt_function(
+            language,
+            lambda line: {
+                "question": get_instruction(language) + line["text"],
+                "choices": CHOICES,
+                "gold_idx": CHOICES.index(line["category"]),
+            },
+            formulation=formulation,
+        ),
+        suite=("filbench",),
+        hf_subset=f"{language.value}_Latn",
+        hf_repo="Davlan/sib200",
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+        hf_avail_splits=["test", "validation"],
+        evaluation_splits=["validation"],
+        few_shots_split="validation",
+        few_shots_select="random",
+        generation_size=-1,
+        trust_dataset=True,
+        version=0,
+    )
 
 
 FILIPINO_SIB_TASKS = [
-    CustomFilipinoSIBTask(name=f"sib200_{lang_code}", lang_code=lang_code) for lang_code in ("tgl", "ceb")
+    create_task(language, formulation)
+    for language in [Language.TAGALOG, Language.CEBUANO]
+    for formulation in [MCFFormulation(), HybridFormulation()]
 ]
