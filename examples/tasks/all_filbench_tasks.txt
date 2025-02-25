@@ -25,8 +25,10 @@ filbench|newsphnli_fil_cf
 filbench|newsphnli_fil_hybrid
 filbench|belebele_ceb_mcf
 filbench|belebele_tgl_mcf
-filbench|sib200_ceb
-filbench|sib200_tgl
+filbench|sib200_ceb_hybrid
+filbench|sib200_tgl_hybrid
+filbench|sib200_ceb_mcf
+filbench|sib200_tgl_mcf
 filbench|firecs_fil
 filbench|global_mmlu_all_tgl_mcf:abstract_algebra
 filbench|global_mmlu_all_tgl_mcf:anatomy
