@@ -1,3 +1,7 @@
+filbench|universalner_tgl_hybrid
+filbench|universalner_tgl_mcf
+filbench|universalner_ceb_hybrid
+filbench|universalner_ceb_mcf
 filbench|tlunifiedner_tgl_hybrid
 filbench|tlunifiedner_tgl_mcf
 filbench|seaifeval_tgl
