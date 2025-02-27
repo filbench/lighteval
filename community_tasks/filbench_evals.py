@@ -39,6 +39,7 @@ from filbench.sib200 import FILIPINO_SIB_TASKS
 from filbench.stingraybench import FILIPINO_STINGRAY_TASKS
 from filbench.tatoeba import FILIPINO_TATOEBA_TASKS
 from filbench.tico19 import FILIPINO_TICO19_TASKS
+from filbench.tlunified_ner import FILIPINO_TLUNIFIED_NER_TASK
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
 
 
@@ -55,4 +56,5 @@ TASKS_TABLE: list[LightevalTaskConfig] = (
     + FILIPINO_STINGRAY_TASKS
     + FILIPINO_TATOEBA_TASKS
     + FILIPINO_SEAIFEVAL_TASKS
+    + FILIPINO_TLUNIFIED_NER_TASK
 )

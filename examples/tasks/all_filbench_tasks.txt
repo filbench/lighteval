@@ -1,3 +1,5 @@
+filbench|tlunifiedner_tgl_hybrid
+filbench|tlunifiedner_tgl_mcf
 filbench|seaifeval_tgl
 filbench|stingraybench_correctness_tgl_hybrid
 filbench|stingraybench_correctness_tgl_mcf
