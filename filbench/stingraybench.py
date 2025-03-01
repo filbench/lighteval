@@ -56,7 +56,7 @@ def prepare_stingray_correctness(line: dict[str, str]) -> dict[str, Any]:
     sentence = line["lang2_sentence"]
     question = f"Is the usage of {word} in this sentence correct? \n{sentence}"
     choices = ["Yes", "No"]
-    gold_idx = choices.index(line["usage_correctness2_lang2_answer"])
+    gold_idx = choices.index(line["usage_correctness_lang2_answer"])
     return {"question": question, "choices": choices, "gold_idx": gold_idx}
 
 
