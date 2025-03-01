@@ -30,7 +30,7 @@ manually translated by native speakers for Indonesian, Javanese, Sundanese,
 Thai, Tagalog, and Vietnamese.
 """
 
-from lighteval.tasks.extended.ifeval.main import ifeval_metrics
+from filbench.sea_ifeval_utils.main import ifeval_metrics
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
 from lighteval.tasks.requests import Doc
 
@@ -47,7 +47,10 @@ def ifeval_prompt(line, task_name: str = None):
         choices=[""],
         gold_index=0,
         instruction="",
-        specific={"instruction_id_list": instruction_id_list, "kwargs": line["kwargs"]},
+        specific={
+            "instructions_id_list": instruction_id_list,
+            "kwargs": line["kwargs"],
+        },
     )
 
 
