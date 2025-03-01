@@ -2,7 +2,6 @@ filbench|cebuaner_ceb_mcf|0|0
 filbench|universalner_tgl_mcf|0|0
 filbench|universalner_ceb_mcf|0|0
 filbench|tlunifiedner_tgl_mcf|0|0
-filbench|seaifeval_tgl|0|0
 filbench|stingraybench_correctness_tgl_mcf|0|0
 filbench|stingraybench_semantic_appropriateness_tgl_mcf|0|0
 filbench|tatoeba_ceb|0|0
