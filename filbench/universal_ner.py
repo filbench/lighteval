@@ -79,7 +79,7 @@ def create_task(language: Language, formulation):
         few_shots_split="test",
         few_shots_select="random",
         suite=["filbench"],
-        generation_size=16,
+        generation_size=-1,
         trust_dataset=True,
         metric=get_metrics_for_formulation(
             formulation,

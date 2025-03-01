@@ -1,10 +1,6 @@
-filbench|cebuaner_ceb_hybrid|0|0
 filbench|cebuaner_ceb_mcf|0|0
-filbench|universalner_tgl_hybrid|0|0
 filbench|universalner_tgl_mcf|0|0
-filbench|universalner_ceb_hybrid|0|0
 filbench|universalner_ceb_mcf|0|0
-filbench|tlunifiedner_tgl_hybrid|0|0
 filbench|tlunifiedner_tgl_mcf|0|0
 filbench|seaifeval_tgl|0|0
 filbench|stingraybench_correctness_tgl_hybrid|0|0
