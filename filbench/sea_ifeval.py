@@ -40,6 +40,15 @@ from lighteval.tasks.requests import Doc
 def ifeval_prompt(line, task_name: str = None):
     query = line["prompts"][0]["text"]
     instruction_id_list = [line["metadata"].get("subcategory")]
+    instruction_id_list = [
+        "keywords:frequency" if item == "keywords:number_frequency" else item
+        for item in instruction_id_list
+    ]
+
+    instruction_id_list = [
+        "startend:nth_paragraph_first_word" if item == "startend:first_word" else item
+        for item in instruction_id_list
+    ]
 
     return Doc(
         task_name=task_name,

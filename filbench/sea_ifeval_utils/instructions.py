@@ -122,7 +122,7 @@ class Instruction:
 class ResponseLanguageChecker(Instruction):
     """Check the language of the entire response."""
 
-    def build_description(self, *, language=None):
+    def build_description(self, *, response_language=None):
         """Build the instruction description.
 
         Args:
@@ -135,7 +135,7 @@ class ResponseLanguageChecker(Instruction):
         Returns:
           A string representing the instruction description.
         """
-        self._language = language
+        self._language = response_language
         if self._language is None:
             self._language = random.choice(list(_LANGUAGES.keys()))
         # TODO(tianjianlu): opens the description generation to more choices.
@@ -777,7 +777,9 @@ class KeywordChecker(Instruction):
 class KeywordFrequencyChecker(Instruction):
     """Check the keyword frequency."""
 
-    def build_description(self, *, keyword=None, frequency=None, relation=None):
+    def build_description(
+        self, *, keyword=None, frequency=None, relation=None, number=None
+    ):
         """Build the instruction description.
 
         Args:
@@ -802,8 +804,16 @@ class KeywordFrequencyChecker(Instruction):
         if self._frequency is None or self._frequency < 0:
             self._frequency = random.randint(1, _KEYWORD_FREQUENCY)
 
+        self._number = number
+        if self._number is None or int(self._number) < 0:
+            self._number = random.randint(1, _KEYWORD_FREQUENCY)
+
         if relation is None:
             self._comparison_relation = random.choice(_COMPARISON_RELATION)
+        elif relation == "at least":
+            self._comparison_relation = "hindi bababa sa"
+        elif relation == "less than":
+            self._comparison_relation = "bababa sa"
         elif relation not in _COMPARISON_RELATION:
             raise ValueError(
                 "The supported relation for comparison must be in "
@@ -820,7 +830,7 @@ class KeywordFrequencyChecker(Instruction):
         return self._description_pattern.format(
             keyword=self._keyword,
             relation=self._comparison_relation,
-            frequency=self._frequency,
+            frequency=self._frequency or self._number,
         )
 
     def get_instruction_args(self):
@@ -943,7 +953,7 @@ class ParagraphFirstWordCheck(Instruction):
     """Check the paragraph and the first word of the nth paragraph."""
 
     def build_description(
-        self, num_paragraphs=None, nth_paragraph=None, first_word=None
+        self, num_paragraphs=None, nth_paragraph=None, first_word=None, **kwargs
     ):
         r"""Build the instruction description.
 

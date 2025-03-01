@@ -39,7 +39,6 @@ _PUNCTUATION = "punctuation:"
 INSTRUCTION_DICT = {
     _KEYWORD + "existence": instructions.KeywordChecker,
     _KEYWORD + "frequency": instructions.KeywordFrequencyChecker,
-    _KEYWORD + "number_frequency": instructions.KeywordFrequencyChecker,
     # TODO(jeffreyzhou): make a proper set of sentences to choose from
     # _KEYWORD + "key_sentences": instructions.KeySentenceChecker,
     _KEYWORD + "forbidden_words": instructions.ForbiddenWords,
