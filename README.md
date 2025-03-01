@@ -74,6 +74,24 @@ python -m lighteval tasks list --custom-tasks community_tasks/filbench_evals.py 
 Please check `lighteval`'s [official documentation on running tasks](https://huggingface.co/docs/lighteval/quicktour).
 Nothing much differs except that all of FilBench's tasks are registered in the `filbench` suite.
 
+**(For FilBench developers)** First you need to log-in to HuggingFace or set your `HF_TOKEN`.
+
+```sh
+export HF_TOKEN=<your HF token here>
+huggingface-cli login  # alternative method for log-in
+```
+
+To run on the full evaluation suite, we advise using the following commands:
+
+```sh
+# For models in HuggingFace and accessible via vLLM
+cat examples/tasks/all_filbench_tasks.txt | xargs -I {} python -m lighteval vllm "pretrained=<MODEL_NAME>" {} --push-to-hub --results-org UD-Filipino --custom-tasks community_tasks/filbench_evals.py
+
+# For models using the OpenAI  API
+export OPENAI_API_KEY=<...>
+cat examples/tasks/all_filbench_tasks.txt | xargs -I {} python -m lighteval  endpoint openai "<MODEL_NAME>" {} --push-to-hub --results-org UD-Filipino --custom-tasks community_tasks/filbench_evals.py
+```
+
 ## 🆕 Implementing a new task
 
 Our structure differs quite a bit from the community tasks in `lighteval`.
