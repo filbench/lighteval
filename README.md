@@ -92,6 +92,8 @@ export OPENAI_API_KEY=<...>
 cat examples/tasks/all_filbench_tasks.txt | xargs -I {} python -m lighteval  endpoint openai "<MODEL_NAME>" {} --push-to-hub --results-org UD-Filipino --custom-tasks community_tasks/filbench_evals.py
 ```
 
+**(For FilBench developers)** Instead of passing the model name in the CLI, you **must** use or create a predefined YAML model configuration in `filbench/model_configs/` and pass the path instead.
+
 ## 🆕 Implementing a new task
 
 Our structure differs quite a bit from the community tasks in `lighteval`.
