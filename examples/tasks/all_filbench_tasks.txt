@@ -18,7 +18,6 @@ filbench|include_tgl_mcf:history|0|0
 filbench|include_tgl_mcf:language|0|0
 filbench|include_tgl_mcf:driving_license|0|0
 filbench|newsphnli_fil_mcf|0|0
-filbench|newsphnli_fil_cf|0|0
 filbench|belebele_ceb_mcf|0|0
 filbench|belebele_tgl_mcf|0|0
 filbench|sib200_ceb_mcf|0|0
