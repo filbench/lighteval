@@ -24,6 +24,7 @@
 
 from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
 from lighteval.metrics.normalizations import LogProbCharNorm, LogProbTokenNorm
+from lighteval.tasks.default_prompts import LETTER_INDICES
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
 from lighteval.tasks.requests import Doc
 from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
@@ -41,15 +42,15 @@ FILIPINO_KALAHI_TASKS = [
         prompt_function=get_mcq_prompt_function(
             language=Language.TAGALOG,
             adapter=lambda line: {
-                "question": line["prompt"],
-                "choices": [line["best_answer"]] + line["irrelevant_answers"],
-                "gold_idx": 0,
+                "question": line["prompts"][0]["question"],
+                "choices": [entry[3:] for entry in line["prompts"][0]["mcq"].split("\n")],
+                "gold_idx": LETTER_INDICES.index(line["label"]),
             },
             formulation=formulation,
         ),
-        hf_repo="aisingapore/kalahi",
+        hf_repo="aisingapore/cultural_evaluation-kalahi",
         hf_subset="default",
-        evaluation_splits=["train"],
+        evaluation_splits=["tl"],
         metric=[
             loglikelihood_acc_metric(normalization=None),
             loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
