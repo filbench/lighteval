@@ -57,7 +57,7 @@ FILIPINO_NTREX_TASK = [
         evaluation_splits=["test"],
         few_shots_split=None,
         few_shots_select=None,
-        generation_size=50,
+        generation_size=64,
         trust_dataset=True,
         version=0,
     )
