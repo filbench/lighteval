@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install uv
 ADD --chmod=755 https://astral.sh/uv/install.sh /install.sh
 RUN /install.sh && rm /install.sh
+RUN mkdir src
 
 # Install dependencies
 COPY pyproject.toml /stage/pyproject.toml
