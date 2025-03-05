@@ -11,7 +11,7 @@ First, clone the repository and install all dependencies:
 git clone git@github.com:filbench/lighteval.git
 # Create a virtualenv
 python3 -m venv venv
-pip install -e .[dev]
+pip install -e .[dev,vllm]
 ```
 
 If you're developing FilBench, we encourage installing a pre-commit hook:
@@ -19,6 +19,12 @@ If you're developing FilBench, we encourage installing a pre-commit hook:
 ```sh
 pre-commit install
 pre-commit run --all-files
+```
+
+**(Using uv)** Another way to install is via `uv`. Internally, we found that `uv` installation is way faster and correct.
+
+```sh
+uv pip install --no-cache -e ".[dev,vllm]"
 ```
 
 ## 🔎 Inspecting a task
