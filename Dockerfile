@@ -7,8 +7,5 @@ WORKDIR /stage
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends git
-COPY requirements.txt /stage
-RUN pip install -e ".[dev,vllm]"
-
-# Copy all files
 COPY . /stage
+RUN pip install -e ".[dev,vllm]"
