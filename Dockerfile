@@ -5,7 +5,13 @@ ENV LANG=C.UTF-8
 
 WORKDIR /stage
 
-RUN apt-get update && apt-get install -y --no-install-recommends git
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    build-essential \
+    curl \
+    unzip \
+    git \
+    vim
 
 # Install uv
 ADD --chmod=755 https://astral.sh/uv/install.sh /install.sh
