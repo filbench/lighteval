@@ -5,7 +5,14 @@ ENV LANG=C.UTF-8
 
 WORKDIR /stage
 
-# Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends git
+
+# Install uv
+ADD --chmod=755 https://astral.sh/uv/install.sh /install.sh
+RUN /install.sh && rm /install.sh
+
+# Install dependencies
+COPY pyproject.toml /stage/pyproject.toml
+RUN /root/.local/bin/uv pip install --system --no-cache -e ".[dev,vllm]"
+
 COPY . /stage
-RUN pip install -e ".[dev,vllm]"
