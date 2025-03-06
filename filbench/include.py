@@ -54,7 +54,11 @@ FILIPINO_INCLUDE_TASKS = [
         name=f"include_{language.value}_{formulation.name.lower()}:{subset}",
         prompt_function=get_mcq_prompt_function(
             language,
-            lambda line: {"question": line["question"], "choices": line["choices"], "gold_idx": line["answer"]},
+            lambda line: {
+                "question": line["question"],
+                "choices": [line[f"option_{i}"] for i in ("a", "b", "c", "d")],
+                "gold_idx": line["answer"],
+            },
             formulation=formulation,
         ),
         suite=("filbench",),
