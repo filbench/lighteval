@@ -29,6 +29,9 @@ orthography, and neural embeddings from the multilingual BERT model.  Results
 show that the use of the first two handcrafted linguistic features obtained the
 best performance trained on an optimized Random Forest model with approximately
 87% across all metrics.
+
+Paper link: https://arxiv.org/pdf/2203.17225
+Dataset link: https://github.com/imperialite/cebuano-readability
 """
 
 from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
