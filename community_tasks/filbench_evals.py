@@ -27,6 +27,7 @@ Custom evaluation tasks for lighteval.
 This file generally creates just a TASKS_TABLE and TASKS_GROUPS which are then imported by LightEval.
 """
 
+from filbench.balita import FILIPINO_BALITA_TASKS
 from filbench.belebele import FILIPINO_BELEBELE_TASKS
 from filbench.cebuaner import FILIPINO_CEBUANER_TASKS
 from filbench.cebuano_readability import FILIPINO_READABILITY_TASKS
@@ -65,4 +66,5 @@ TASKS_TABLE: list[LightevalTaskConfig] = (
     + FILIPINO_CEBUANER_TASKS
     + FILIPINO_KALAHI_TASKS
     + FILIPINO_READABILITY_TASKS
+    + FILIPINO_BALITA_TASKS
 )

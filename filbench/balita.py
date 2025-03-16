@@ -24,10 +24,9 @@
 
 """
 Paper link: https://storage.googleapis.com/public-kenricklancebunag/Transformer-based%20Conditional%20Language%20Models%20-%20IEOM%20Submission.pdf
-Dataset link: https://github.com/KenrickLance/BalitaNLP-Dataset
+Original dataset link: https://github.com/KenrickLance/BalitaNLP-Dataset
+HF dataset link: https://huggingface.co/datasets/LanceBunag/BalitaNLP
 """
-
-from langcodes import Language as LangCodeLanguage
 
 from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
 from lighteval.metrics.normalizations import (
@@ -41,25 +40,26 @@ from lighteval.tasks.templates.utils.formulation import (
     HybridFormulation,
     MCFFormulation,
 )
+from lighteval.utils.language import Language
 
 
-QUESTION = "Alin sa mga titlulong nakalista ang pinaka-angkop para sa teksto na ito?"
+QUESTION = "Alin sa mga titlulong nakalista sa ibaba ang pinaka-angkop para sa teksto?"
 FILIPINO_BALITA_TASKS = [
     LightevalTaskConfig(
-        name=f"belebele_tgl_{formulation.name.lower()}",
+        name=f"balita_tgl_{formulation.name.lower()}",
         prompt_function=get_mcq_prompt_function(
-            language=LangCodeLanguage("tgl"),
+            language=Language.TAGALOG,
             adapter=lambda line: {
                 "question": QUESTION,
-                "context": line["text"],
-                "choices": line["choices"],
-                "gold_idx": line["gold_idx"],
+                "context": f'Teksto: {line["title_choice_first_paragraph"]}',
+                "choices": line["title_choices"],
+                "gold_idx": line["title_choice_gold_idx"],
             },
             formulation=formulation,
         ),
         suite=("filbench",),
-        hf_repo="balita-nlp/processed",
-        hf_subset="default",
+        hf_repo="LanceBunag/BalitaNLP",
+        hf_subset="no-image",
         hf_avail_splits=["train", "validation", "test"],
         evaluation_splits=("validation", "test"),
         metric=get_metrics_for_formulation(
