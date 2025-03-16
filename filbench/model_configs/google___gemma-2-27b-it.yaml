@@ -1,0 +1,20 @@
+model:
+  base_params:
+    model_args: "pretrained=google/gemma-2-27b-it,revision=main"
+    dtype: "bfloat16"
+    compile: true
+  merged_weights: 
+    delta_weights: false
+    adapter_weights: false
+    base_model: null
+  generation:
+    temperature: 0.5
+    repetition_penalty: 1.0
+    frequency_penalty: 0.0
+    presence_penalty: 0.0
+    seed: 42
+    top_k: -1
+    min_p: 0.0
+    top_p: 0.9
+    max_new_tokens: 2048
+
