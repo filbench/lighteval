@@ -20,3 +20,4 @@ filbench|sib200_ceb_mcf|0|0
 filbench|sib200_tgl_mcf|0|0
 filbench|firecs_fil_mcf|0|0
 filbench|global_mmlu_all_tgl_mcf|0|0
+filbench|balita_tgl_mcf|0|0
