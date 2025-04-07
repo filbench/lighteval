@@ -269,7 +269,10 @@ class OpenAIClient(LightevalModel):
             )
 
             for output, input in zip(outputs, dataset):
-                continuation_logprobs = [content.logprob for content in output.choices[0].logprobs.content]
+                try:
+                    continuation_logprobs = [content.logprob for content in output.choices[0].logprobs.content]
+                except TypeError:
+                    continuation_logprobs = output.choices[0].logprobs.token_logprobs
                 answer = LoglikelihoodResponse(
                     input_tokens=input.tokenized_context + input.tokenized_continuation,
                     generated_tokens=input.tokenized_continuation,
