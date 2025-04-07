@@ -1,0 +1,12 @@
+model:
+  model_name: "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+  provider: "together"
+  api_key: $TOGETHER_API_KEY # Replace with your actual API key
+  generation:
+    temperature: 0
+
+# To run:
+# python -m lighteval endpoint inference-providers \
+# "endpoint_provider.yaml" \
+# "filbench|global_mmlu_all_tgl_mcf:anatomy|0|0" \
+# --custom-tasks community_tasks/filbench_evals.py

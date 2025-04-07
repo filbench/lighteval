@@ -184,3 +184,5 @@ logs
 _logs
 outputs
 run_configs
+
+.litellm_cache
