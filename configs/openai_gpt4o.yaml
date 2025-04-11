@@ -1,0 +1,4 @@
+model:
+  model_name: "gpt-4o-mini"
+  generation:
+    temperature: 0

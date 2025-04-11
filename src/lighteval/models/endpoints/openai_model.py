@@ -102,7 +102,7 @@ class OpenAIClient(LightevalModel):
         self.API_MAX_RETRY = 5
         self.API_RETRY_SLEEP = 3
         self.API_RETRY_MULTIPLIER = 2
-        self.CONCURENT_CALLS = 100
+        self.CONCURENT_CALLS = 10
         self.model = config.model
         try:
             self._tokenizer = tiktoken.encoding_for_model(self.model)

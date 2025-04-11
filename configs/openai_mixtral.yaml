@@ -1,5 +1,5 @@
 model:
-  model_name: "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+  model_name: "mistralai/Mixtral-8x7B-Instruct-v0.1"
   generation:
     temperature: 0
 
