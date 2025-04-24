@@ -2,8 +2,6 @@
 
 MODEL_NAME=$1
 TASK_NAME=$2
-MAX_SAMPLES=$3
-INFERENCE_ENGINE=$4
 
 if [ -z "$MODEL_NAME" ]; then
   echo "Error: No model name provided."
@@ -17,8 +15,7 @@ if [ -z "$TASK_NAME" ]; then
   exit 1
 fi
 
-python -m lighteval ${INFERENCE_ENGINE} ${MODEL_NAME} ${TASK_NAME} \
+python -m lighteval vllm ${MODEL_NAME} ${TASK_NAME} \
     --push-to-hub \
     --results-org UD-Filipino \
-    --custom-tasks community_tasks/filbench_evals.py \
-    --max-samples $MAX_SAMPLES
+    --custom-tasks community_tasks/filbench_evals.py
