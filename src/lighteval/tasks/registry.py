@@ -59,6 +59,7 @@ DEFAULT_SUITES = [
     "extended",
     "custom",
     "community",
+    "test",
     "filbench",
 ]
 
@@ -251,7 +252,9 @@ class Registry:
                 print(f"  - {task_name}")
 
 
-def create_custom_tasks_module(custom_tasks: Union[str, Path, ModuleType]) -> ModuleType:
+def create_custom_tasks_module(
+    custom_tasks: Union[str, Path, ModuleType],
+) -> ModuleType:
     """Creates a custom task module to load tasks defined by the user in their own file.
 
     Args:
