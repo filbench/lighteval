@@ -136,7 +136,7 @@ This helps a lot in organization and for multiple people working on different be
 
 ---
 
-**Documentation**: <a href="https://huggingface.co/docs/lighteval/index" target="_blank">Lighteval's Wiki</a>
+**Documentation**: <a href="https://huggingface.co/docs/lighteval/main/en/index" target="_blank">HF's doc</a>
 
 ---
 
@@ -166,6 +166,8 @@ Hub, S3, or locally.
 - **Versatility**: Tons of [metrics](https://huggingface.co/docs/lighteval/metric-list) and [tasks](https://huggingface.co/docs/lighteval/available-tasks) ready to go.
 
 ## ⚡️ Installation
+
+Note that lighteval is currently completely untested on Windows, and we don't support it yet. (Should be fully functional on Mac/Linux)
 
 ```bash
 pip install lighteval
@@ -237,7 +239,7 @@ pre-commit run --all-files
 
 ```bibtex
 @misc{lighteval,
-  author = {Fourrier, Clémentine and Habib, Nathan and Kydlíček, Hynek and Wolf, Thomas and Tunstall, Lewis},
+  author = {Habib, Nathan and Fourrier, Clémentine and Kydlíček, Hynek and Wolf, Thomas and Tunstall, Lewis},
   title = {LightEval: A lightweight framework for LLM evaluation},
   year = {2023},
   version = {0.8.0},
