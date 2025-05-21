@@ -72,6 +72,13 @@ def inference_endpoint(
     output_dir: Annotated[
         str, Option(help="Output directory for evaluation results.", rich_help_panel=HELP_PANEL_NAME_2)
     ] = "results",
+    results_path_template: Annotated[
+        str | None,
+        Option(
+            help="Template path for where to save the results, you have access to 3 variables, `output_dir`, `org` and `model`. for example a template can be `'{output_dir}/1234/{org}+{model}'`",
+            rich_help_panel=HELP_PANEL_NAME_2,
+        ),
+    ] = None,
     push_to_hub: Annotated[
         bool, Option(help="Push results to the huggingface hub.", rich_help_panel=HELP_PANEL_NAME_2)
     ] = False,
@@ -111,6 +118,7 @@ def inference_endpoint(
 
     evaluation_tracker = EvaluationTracker(
         output_dir=output_dir,
+        results_path_template=results_path_template,
         save_details=save_details,
         push_to_hub=push_to_hub,
         push_to_tensorboard=push_to_tensorboard,
@@ -185,6 +193,13 @@ def tgi(
     output_dir: Annotated[
         str, Option(help="Output directory for evaluation results.", rich_help_panel=HELP_PANEL_NAME_2)
     ] = "results",
+    results_path_template: Annotated[
+        str | None,
+        Option(
+            help="Template path for where to save the results, you have access to 3 variables, `output_dir`, `org` and `model`. for example a template can be `'{output_dir}/1234/{org}+{model}'`",
+            rich_help_panel=HELP_PANEL_NAME_2,
+        ),
+    ] = None,
     push_to_hub: Annotated[
         bool, Option(help="Push results to the huggingface hub.", rich_help_panel=HELP_PANEL_NAME_2)
     ] = False,
@@ -199,6 +214,13 @@ def tgi(
     ] = None,
     save_details: Annotated[
         bool, Option(help="Save detailed, sample per sample, results.", rich_help_panel=HELP_PANEL_NAME_2)
+    ] = False,
+    wandb: Annotated[
+        bool,
+        Option(
+            help="Push results to wandb. This will only work if you have wandb installed and logged in. We use env variable to configure wandb. see here: https://docs.wandb.ai/guides/track/environment-variables/",
+            rich_help_panel=HELP_PANEL_NAME_2,
+        ),
     ] = False,
     # === debug ===
     max_samples: Annotated[
@@ -220,11 +242,13 @@ def tgi(
 
     evaluation_tracker = EvaluationTracker(
         output_dir=output_dir,
+        results_path_template=results_path_template,
         save_details=save_details,
         push_to_hub=push_to_hub,
         push_to_tensorboard=push_to_tensorboard,
         public=public_run,
         hub_results_org=results_org,
+        wandb=wandb,
     )
 
     parallelism_manager = ParallelismManager.TGI
@@ -275,9 +299,6 @@ def litellm(
     ],
     tasks: Annotated[str, Argument(help="Comma-separated list of tasks to evaluate on.")],
     # === Common parameters ===
-    use_chat_template: Annotated[
-        bool, Option(help="Use chat template for evaluation.", rich_help_panel=HELP_PANEL_NAME_4)
-    ] = False,
     system_prompt: Annotated[
         Optional[str], Option(help="Use system prompt for evaluation.", rich_help_panel=HELP_PANEL_NAME_4)
     ] = None,
@@ -297,6 +318,13 @@ def litellm(
     output_dir: Annotated[
         str, Option(help="Output directory for evaluation results.", rich_help_panel=HELP_PANEL_NAME_2)
     ] = "results",
+    results_path_template: Annotated[
+        str | None,
+        Option(
+            help="Template path for where to save the results, you have access to 3 variables, `output_dir`, `org` and `model`. for example a template can be `'{output_dir}/1234/{org}+{model}'`",
+            rich_help_panel=HELP_PANEL_NAME_2,
+        ),
+    ] = None,
     push_to_hub: Annotated[
         bool, Option(help="Push results to the huggingface hub.", rich_help_panel=HELP_PANEL_NAME_2)
     ] = False,
@@ -311,6 +339,13 @@ def litellm(
     ] = None,
     save_details: Annotated[
         bool, Option(help="Save detailed, sample per sample, results.", rich_help_panel=HELP_PANEL_NAME_2)
+    ] = False,
+    wandb: Annotated[
+        bool,
+        Option(
+            help="Push results to wandb. This will only work if you have wandb installed and logged in. We use env variable to configure wandb. see here: https://docs.wandb.ai/guides/track/environment-variables/",
+            rich_help_panel=HELP_PANEL_NAME_2,
+        ),
     ] = False,
     # === debug ===
     max_samples: Annotated[
@@ -332,11 +367,13 @@ def litellm(
 
     evaluation_tracker = EvaluationTracker(
         output_dir=output_dir,
+        results_path_template=results_path_template,
         save_details=save_details,
         push_to_hub=push_to_hub,
         push_to_tensorboard=push_to_tensorboard,
         public=public_run,
         hub_results_org=results_org,
+        wandb=wandb,
     )
 
     parallelism_manager = ParallelismManager.NONE
@@ -357,7 +394,7 @@ def litellm(
         custom_tasks_directory=custom_tasks,
         num_fewshot_seeds=num_fewshot_seeds,
         max_samples=max_samples,
-        use_chat_template=use_chat_template,
+        use_chat_template=True,
         system_prompt=system_prompt,
         load_responses_from_details_date_id=load_responses_from_details_date_id,
     )
@@ -407,6 +444,13 @@ def inference_providers(
     output_dir: Annotated[
         str, Option(help="Output directory for evaluation results.", rich_help_panel=HELP_PANEL_NAME_2)
     ] = "results",
+    results_path_template: Annotated[
+        str | None,
+        Option(
+            help="Template path for where to save the results, you have access to 3 variables, `output_dir`, `org` and `model`. for example a template can be `'{output_dir}/1234/{org}+{model}'`",
+            rich_help_panel=HELP_PANEL_NAME_2,
+        ),
+    ] = None,
     push_to_hub: Annotated[
         bool, Option(help="Push results to the huggingface hub.", rich_help_panel=HELP_PANEL_NAME_2)
     ] = False,
@@ -421,6 +465,13 @@ def inference_providers(
     ] = None,
     save_details: Annotated[
         bool, Option(help="Save detailed, sample per sample, results.", rich_help_panel=HELP_PANEL_NAME_2)
+    ] = False,
+    wandb: Annotated[
+        bool,
+        Option(
+            help="Push results to wandb. This will only work if you have wandb installed and logged in. We use env variable to configure wandb. see here: https://docs.wandb.ai/guides/track/environment-variables/",
+            rich_help_panel=HELP_PANEL_NAME_2,
+        ),
     ] = False,
     # === debug ===
     max_samples: Annotated[
@@ -442,11 +493,13 @@ def inference_providers(
 
     evaluation_tracker = EvaluationTracker(
         output_dir=output_dir,
+        results_path_template=results_path_template,
         save_details=save_details,
         push_to_hub=push_to_hub,
         push_to_tensorboard=push_to_tensorboard,
         public=public_run,
         hub_results_org=results_org,
+        wandb=wandb,
     )
 
     # TODO (nathan): better handling of model_args

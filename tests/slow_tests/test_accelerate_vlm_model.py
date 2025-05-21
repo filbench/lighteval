@@ -35,15 +35,13 @@ from lighteval.main_accelerate import accelerate  # noqa: E402
 os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 
 MODELS_ARGS = [
-    # {"model_name": "gpt2", "use_chat_template": False, "revision": "main", "results_file": "tests/reference_scores/gpt2-results.json"},
     {
-        "model_name": "examples/model_configs/transformers_model.yaml",
+        "model_name": "examples/model_configs/transformers_vlm_model.yaml",
         "use_chat_template": True,
-        "results_file": "tests/reference_scores/SmolLM2-1.7B-Instruct-results-accelerate.json",
+        "results_file": "tests/reference_scores/Qwen2.5-VL-3B-Instruct-results-vlm.json",
     }
 ]
-TASKS_PATH = "examples/test_tasks.txt"
-CUSTOM_TASKS_PATH = "examples/custom_tasks_tests.py"
+TASKS = "lighteval|mmmu_pro:standard-4|0|0"
 
 ModelInput = Tuple[str, Callable[[], dict]]
 
@@ -53,13 +51,13 @@ def run_model(model_name: str, use_chat_template: bool):
     """Runs the full main as a black box, using the input model and tasks, on 10 samples without parallelism"""
     results = accelerate(
         model_args=model_name,
-        tasks=TASKS_PATH,
+        tasks=TASKS,
         use_chat_template=use_chat_template,
         output_dir="",
         dataset_loading_processes=1,
         save_details=False,
-        max_samples=10,
-        custom_tasks=CUSTOM_TASKS_PATH,
+        max_samples=30,
+        vision_model=True,
     )
     return results
 
