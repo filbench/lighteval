@@ -579,7 +579,7 @@ class EvaluationTracker:
         new_dictionary.update(results_dict)
         results_string = json.dumps(new_dictionary, indent=4)
 
-        # If we are pushing to the Oppen LLM Leaderboard, we'll store specific data in the model card.
+        # If we are pushing to the Open LLM Leaderboard, we'll store specific data in the model card.
         is_open_llm_leaderboard = repo_id.split("/")[0] == "open-llm-leaderboard"
         if is_open_llm_leaderboard:
             org_string = (
@@ -603,7 +603,7 @@ class EvaluationTracker:
             f"To load the details from a run, you can for instance do the following:\n"
             f'```python\nfrom datasets import load_dataset\ndata = load_dataset("{repo_id}",\n\t"{sanitized_task}",\n\tsplit="train")\n```\n\n'
             f"## Latest results\n\n"
-            f'These are the [latest results from run {max_last_eval_date_results}]({last_results_file_path.replace("/resolve/", "/blob/")})'
+            f"These are the [latest results from run {max_last_eval_date_results}]({last_results_file_path.replace('/resolve/', '/blob/')})"
             f"(note that their might be results for other tasks in the repos if successive evals didn't cover the same tasks. "
             f'You find each in the results and the "latest" split for each eval):\n\n'
             f"```python\n{results_string}\n```",
@@ -695,7 +695,7 @@ class EvaluationTracker:
         # We are doing parallel evaluations of multiple checkpoints and recording the steps not in order
         # This messes up with tensorboard, so the easiest is to rename files in the order of the checkpoints
         # See: https://github.com/tensorflow/tensorboard/issues/5958
-        # But tensorboardX don't let us control the prefix of the files (only the suffix), so we need to do it ourselves before commiting the files
+        # But tensorboardX don't let us control the prefix of the files (only the suffix), so we need to do it ourselves before committing the files
 
         # tb_context.close()  # flushes the unfinished write operations
         time.sleep(5)
