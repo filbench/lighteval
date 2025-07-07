@@ -23,6 +23,7 @@
 # ruff: noqa: F405, F403, F401
 from collections import OrderedDict
 from functools import partial
+from typing import Any
 
 from langcodes import Language as LangCodeLanguage
 from langcodes import standardize_tag
@@ -515,6 +516,253 @@ FILIPINO_SIB_TASKS = [
     for formulation in [MCFFormulation(), HybridFormulation()]
 ]
 
+
+def prepare_stingray_correctness(line: dict[str, str]) -> dict[str, Any]:
+    # lang2 is Tagalog
+    word = line["word"]
+    sentence = line["lang2_sentence"]
+    question = f"Is the usage of {word} in this sentence correct? \n{sentence}"
+    choices = ["Yes", "No"]
+    gold_idx = choices.index(line["usage_correctness_lang2_answer"])
+    return {"question": question, "choices": choices, "gold_idx": gold_idx}
+
+
+def prepare_stingray_semantic_appropriateness(line: dict[str, str]) -> dict[str, Any]:
+    lang1 = line["lang1_sentence"]
+    lang2 = line["lang2_sentence"]
+    question = "Which sentence is more semantically appropriate?"
+    choices = [lang1, lang2, "Both"]
+    choice_letters = ["A", "B", "C"]
+    gold_idx = choice_letters.index(line["semantic_appropriate_answer"])
+    return {"question": question, "choices": choices, "gold_idx": gold_idx}
+
+
+FILIPINO_STINGRAY_CORRECTNESS_TASKS = [
+    LightevalTaskConfig(
+        name=f"stingraybench_correctness_tgl_{formulation.name.lower()}",
+        prompt_function=get_mcq_prompt_function(
+            Language.ENGLISH,  # the orig instruction is in English, so we replicate it.
+            adapter=prepare_stingray_correctness,
+            formulation=formulation,
+        ),
+        suite=("filbench",),
+        hf_subset="id_tl",
+        hf_repo="StingrayBench/StingrayBench",
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+        hf_avail_splits=["test"],
+        evaluation_splits=["test"],
+        few_shots_split="test",
+        few_shots_select="random",
+        generation_size=-1,
+        trust_dataset=True,
+        version=0,
+    )
+    for formulation in [MCFFormulation(), HybridFormulation()]
+]
+
+FILIPINO_STINGRAY_SEMANTIC_TAKS = [
+    LightevalTaskConfig(
+        name=f"stingraybench_semantic_appropriateness_tgl_{formulation.name.lower()}",
+        prompt_function=get_mcq_prompt_function(
+            Language.ENGLISH,  # the orig instruction is in English, so we replicate it.
+            adapter=prepare_stingray_semantic_appropriateness,
+            formulation=formulation,
+        ),
+        suite=("filbench",),
+        hf_subset="id_tl",
+        hf_repo="StingrayBench/StingrayBench",
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+        hf_avail_splits=["test"],
+        evaluation_splits=["test"],
+        few_shots_split="test",
+        few_shots_select="random",
+        generation_size=-1,
+        trust_dataset=True,
+        version=0,
+    )
+    for formulation in [MCFFormulation(), HybridFormulation()]
+]
+
+FILIPINO_STINGRAY_TASKS = FILIPINO_STINGRAY_SEMANTIC_TAKS + FILIPINO_STINGRAY_CORRECTNESS_TASKS
+
+# Tatoeba
+# We follow the original translation direction from tatoeba
+lang_dict = {
+    "ceb": {
+        "subset": "ceb-eng",
+        "source_language": Language.CEBUANO,
+        "target_language": Language.ENGLISH,
+    },
+    "tgl": {
+        "subset": "eng-tgl",
+        "source_language": Language.ENGLISH,
+        "target_language": Language.TAGALOG,
+    },
+}
+
+FILIPINO_TATOEBA_TASKS = [
+    LightevalTaskConfig(
+        name=f"tatoeba_{language}",
+        prompt_function=get_translation_prompt_function(
+            source_language=meta.get("source_language"),
+            target_language=meta.get("target_language"),
+            adapter=lambda line: {
+                "source_text": line["sourceString"],
+                "target_text": line["targetString"],
+            },
+            formulation=CFFormulation(),
+        ),
+        suite=("filbench",),
+        hf_repo="Helsinki-NLP/tatoeba_mt",
+        hf_subset=meta.get("subset"),
+        metric=[
+            Metrics.rougeL,
+            Metrics.bleu,
+            Metrics.bleurt,
+            Metrics.chrf,
+            Metrics.ter,
+        ],
+        hf_avail_splits=["test"],
+        evaluation_splits=["test"],
+        trust_dataset=True,
+        generation_size=64,
+    )
+    for language, meta in lang_dict.items()
+]
+
+# TICO-19
+FILIPINO_TICO19_TASKS = [
+    LightevalTaskConfig(
+        name="tico19_tgl",
+        prompt_function=get_translation_prompt_function(
+            source_language=Language.ENGLISH,
+            target_language=Language.TAGALOG,
+            adapter=lambda line: {
+                "source_text": line["sourceString"],
+                "target_text": line["targetString"],
+            },
+            formulation=CFFormulation(),
+        ),
+        suite=("filbench",),
+        hf_repo="gmnlp/tico19",
+        hf_subset="en-tl",
+        metric=[
+            Metrics.rougeL,
+            Metrics.bleu,
+            Metrics.bleurt,
+            Metrics.chrf,
+            Metrics.ter,
+        ],
+        hf_avail_splits=["test", "validation"],
+        evaluation_splits=["validation"],
+        few_shots_split=["validation"],
+        few_shots_select="random",
+        trust_dataset=True,
+        generation_size=64,
+    )
+]
+
+# TLUnified-NER
+tlunified_ner_choices = ["PERSON", "ORGANIZATION", "LOCATION"]
+tlunified_ner_answer_idx = ["A", "B", "C"]
+
+FILIPINO_TLUNIFIED_NER_TASK = [
+    LightevalTaskConfig(
+        name=f"tlunifiedner_tgl_{formulation.name.lower()}",
+        hf_subset="instruction",
+        prompt_function=get_mcq_prompt_function(
+            Language.TAGALOG,
+            lambda line: {
+                "question": f"Ano ang named-entity ng salitang '{line['entity']}' sa pangungusap na ito: {line['text']}",
+                "choices": tlunified_ner_choices,
+                "gold_idx": tlunified_ner_answer_idx.index(line["answer"]),
+            },
+            formulation=formulation,
+        ),
+        hf_repo="ljvmiranda921/tlunified-ner",
+        hf_avail_splits=["test"],
+        evaluation_splits=["test"],
+        few_shots_split="test",
+        few_shots_select="random",
+        suite=["filbench"],
+        generation_size=-1,
+        trust_dataset=True,
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+        version=0,
+    )
+    for formulation in [MCFFormulation(), HybridFormulation()]
+]
+
+# Universal NER
+universalner_choices = ["PERSON", "ORGANIZATION", "LOCATION"]
+universalner_answer_idx = ["A", "B", "C"]
+
+
+def create_task(language: Language, formulation):
+    if language == Language.CEBUANO:
+        question = "Unsa ang ginganlan nga named-entity sa pulong '{entity}' niini nga sentence: {text}"
+    if language == Language.TAGALOG:
+        question = "Ano ang named-entity ng salitang '{entity}' sa pangungusap na ito: {text}"
+
+    return LightevalTaskConfig(
+        name=f"universalner_{language.value}_{formulation.name.lower()}",
+        hf_subset=language.value,
+        prompt_function=get_mcq_prompt_function(
+            language,
+            lambda line: {
+                "question": question.format(entity=line["entity"], text=line["text"]),
+                "choices": universalner_choices,
+                "gold_idx": universalner_answer_idx.index(line["answer"]),
+            },
+            formulation=formulation,
+        ),
+        hf_repo="UD-Filipino/universalner-instruction",
+        hf_avail_splits=["test"],
+        evaluation_splits=["test"],
+        few_shots_split="test",
+        few_shots_select="random",
+        suite=["filbench"],
+        generation_size=-1,
+        trust_dataset=True,
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+        version=0,
+    )
+
+
+FILIPINO_UNIVERSALNER_TASKS = [
+    create_task(language, formulation)
+    for language in [Language.CEBUANO, Language.TAGALOG]
+    for formulation in [MCFFormulation(), HybridFormulation()]
+]
+
 TASKS_TABLE: list[LightevalTaskConfig] = (
     FILIPINO_BALITA_TASKS
     + FILIPINO_BELEBELE_TASKS
@@ -528,4 +776,8 @@ TASKS_TABLE: list[LightevalTaskConfig] = (
     + FILIPINO_NEWSPH_NLI_TASKS
     + FILIPINO_NTREX_TASK
     + FILIPINO_SIB_TASKS
+    + FILIPINO_STINGRAY_TASKS
+    + FILIPINO_TATOEBA_TASKS
+    + FILIPINO_TICO19_TASKS
+    + FILIPINO_TLUNIFIED_NER_TASK
 )
