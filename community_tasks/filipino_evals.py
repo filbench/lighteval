@@ -763,6 +763,8 @@ FILIPINO_UNIVERSALNER_TASKS = [
     for formulation in [MCFFormulation(), HybridFormulation()]
 ]
 
+# Tasks Table
+
 TASKS_TABLE: list[LightevalTaskConfig] = (
     FILIPINO_BALITA_TASKS
     + FILIPINO_BELEBELE_TASKS
