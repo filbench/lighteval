@@ -27,6 +27,7 @@ from langcodes import Language as LangCodeLanguage
 from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
 from lighteval.metrics.normalizations import (
     LogProbCharNorm,
+    LogProbPMINorm,
     LogProbTokenNorm,
 )
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
@@ -101,6 +102,87 @@ FILIPINO_BELEBELE_TASKS = [
     for language in ["tgl_Latn", "ceb_Latn"]
 ]
 
-TASKS_TABLE: list[LightevalTaskConfig] = [
-    FILIPINO_BALITA_TASKS,
+# CebuaNER
+cebuaner_choices = ["PERSON", "ORGANIZATION", "LOCATION", "OTHER"]
+cebuaner_answer_idx = ["A", "B", "C", "D"]
+question = "Unsa ang ginganlan nga named-entity sa pulong '{entity}' niini nga sentence: {text}"
+FILIPINO_CEBUANER_TASKS = [
+    LightevalTaskConfig(
+        name=f"cebuaner_ceb_{formulation.name.lower()}",
+        hf_subset="default",
+        prompt_function=get_mcq_prompt_function(
+            Language.CEBUANO,
+            lambda line: {
+                "question": question.format(entity=line["entity"], text=line["text"]),
+                "choices": cebuaner_choices,
+                "gold_idx": cebuaner_answer_idx.index(line["answer"]),
+            },
+            formulation=formulation,
+        ),
+        hf_repo="UD-Filipino/cebuaner-instruction",
+        hf_avail_splits=["test"],
+        evaluation_splits=["test"],
+        few_shots_split="test",
+        few_shots_select="random",
+        suite=["filbench"],
+        generation_size=-1,
+        trust_dataset=True,
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+        version=0,
+    )
+    for formulation in [MCFFormulation(), HybridFormulation()]
 ]
+
+# Cebuano Readability
+cebuano_readability_choices = ["Grade 1", "Grade 2", "Grade 3"]
+cebuano_readability_instruction = """
+Unsa ang angay nga lebel sa grado alang sa mosunod nga teksto?
+
+Grade 1 - ang teksto mahimong basahon sa usa ka tawo tali sa edad nga 6-7.
+Grade 2 - ang teksto mahimong basahon sa usa ka tawo tali sa edad nga 7-8.
+Grade 3 - ang teksto mahimong basahon sa usa ka tawo tali sa edad nga 8-9.
+"""
+FILIPINO_READABILITY_TASKS = [
+    LightevalTaskConfig(
+        name=f"readability_ceb_{formulation.name.lower()}",
+        prompt_function=get_mcq_prompt_function(
+            Language.CEBUANO,
+            lambda line: {
+                "question": cebuano_readability_instruction + line["text"],
+                "choices": cebuano_readability_choices,
+                "gold_idx": cebuano_readability_choices.index(f"Grade {line['label']}"),
+            },
+            formulation=formulation,
+        ),
+        suite=("filbench",),
+        hf_subset="default",
+        hf_repo="UD-Filipino/cebuano-readability",
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+        hf_avail_splits=["test"],
+        evaluation_splits=["test"],
+        few_shots_split="test",
+        few_shots_select="random",
+        generation_size=-1,
+        trust_dataset=True,
+        version=0,
+    )
+    for formulation in [MCFFormulation(), HybridFormulation()]
+]
+
+TASKS_TABLE: list[LightevalTaskConfig] = (
+    FILIPINO_BALITA_TASKS + FILIPINO_BELEBELE_TASKS + FILIPINO_CEBUANER_TASKS + FILIPINO_READABILITY_TASKS
+)
