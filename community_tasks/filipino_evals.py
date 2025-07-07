@@ -40,6 +40,8 @@ from lighteval.tasks.multilingual.tasks import MMLU_SUBSETS
 from lighteval.tasks.multilingual.utils.task_utils import get_metrics_for_formulation
 from lighteval.tasks.requests import Doc
 from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
+from lighteval.tasks.templates.nli import get_nli_prompt_function
+from lighteval.tasks.templates.translation import get_translation_prompt_function
 from lighteval.tasks.templates.utils.formulation import (
     CFFormulation,
     HybridFormulation,
@@ -322,6 +324,196 @@ FILIPINO_GLOBAL_MMLU_TASKS = [
     for sensitivity_label in ["ALL", "CA", "CS", "UNK"]
 ]
 
+# INCLUDE
+
+FILIPINO_INCLUDE_TASKS = [
+    LightevalTaskConfig(
+        name=f"include_{language.value}_{formulation.name.lower()}:{subset}",
+        prompt_function=get_mcq_prompt_function(
+            language,
+            lambda line: {
+                "question": line["question"],
+                "choices": [line[f"option_{i}"] for i in ("a", "b", "c", "d")],
+                "gold_idx": line["answer"],
+            },
+            formulation=formulation,
+        ),
+        suite=("filbench",),
+        hf_subset="Tagalog",
+        hf_repo="CohereForAI/include-base-44",
+        hf_filter=partial(lambda subset, x: x["subject"].replace(" ", "_").lower() == subset, subset),
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+        hf_avail_splits=["test"],
+        evaluation_splits=["test"],
+        few_shots_split="test",
+        few_shots_select="random",
+        generation_size=-1,
+        trust_dataset=True,
+        version=0,
+    )
+    for subset in ["culturology", "history", "language", "driving_license"]
+    for language in [Language.TAGALOG]
+    for formulation in [MCFFormulation(), HybridFormulation()]
+]
+
+# KALAHI
+FILIPINO_KALAHI_TASKS = [
+    LightevalTaskConfig(
+        name=f"kalahi_tgl_{formulation.name.lower()}",
+        suite=["filbench"],
+        prompt_function=get_mcq_prompt_function(
+            language=Language.TAGALOG,
+            adapter=lambda line: {
+                "question": line["prompts"][0]["question"],
+                "choices": [entry[3:] for entry in line["prompts"][0]["mcq"].split("\n")],
+                "gold_idx": LETTER_INDICES.index(line["label"]),
+            },
+            formulation=formulation,
+        ),
+        hf_repo="aisingapore/cultural_evaluation-kalahi",
+        hf_subset="default",
+        evaluation_splits=["tl"],
+        metric=[
+            loglikelihood_acc_metric(normalization=None),
+            loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+            loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+        ],
+    )
+    for formulation in [HybridFormulation(), MCFFormulation()]
+]
+
+# NewsPH NLI
+FILIPINO_NEWSPH_NLI_TASKS = [
+    LightevalTaskConfig(
+        name=f"newsphnli_fil_{formulation.name.lower()}",
+        suite=["filbench"],
+        prompt_function=get_nli_prompt_function(
+            language=Language.TAGALOG,
+            adapter=lambda line: {
+                "premise": line["premise"],
+                "hypothesis": line["hypothesis"],
+                # Since there is no neutral label
+                "gold_idx": line["label"],
+            },
+            relations=["entailment", "contradiction"],
+            formulation=formulation,
+        ),
+        hf_repo="jcblaise/newsph_nli",
+        hf_subset="default",
+        evaluation_splits=["validation"],
+        few_shots_split="train",
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=None),
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+            ],
+        ),
+        trust_dataset=True,
+    )
+    for formulation in [MCFFormulation(), CFFormulation(), HybridFormulation()]
+]
+
+# NTREX-128
+FILIPINO_NTREX_TASK = [
+    LightevalTaskConfig(
+        name=f"ntrex128_{LangCodeLanguage.get(language).to_alpha3()}",
+        prompt_function=get_translation_prompt_function(
+            source_language=Language.ENGLISH,
+            target_language=iso_639_3_ind_to_iso_639_3_macro[LangCodeLanguage.get(language).to_alpha3()],
+            adapter=lambda line: {
+                "source_text": line["eng_Latn"],
+                "target_text": line[language],
+            },
+            formulation=CFFormulation(),
+        ),
+        suite=("filbench",),
+        hf_repo="mteb/NTREX",
+        hf_subset="default",
+        metric=[
+            Metrics.rougeL,
+            Metrics.bleu,
+            Metrics.bleurt,
+            Metrics.chrf,
+            Metrics.ter,
+        ],
+        hf_avail_splits=["test"],
+        evaluation_splits=["test"],
+        few_shots_split=None,
+        few_shots_select=None,
+        generation_size=64,
+        trust_dataset=True,
+        version=0,
+    )
+    for language in ["fil_Latn"]
+]
+
+# SIB-200
+
+sib200_choices = [
+    "geography",
+    "science/technology",
+    "entertainment",
+    "travel",
+    "sports",
+    "health",
+    "politics",
+]
+
+
+def get_instruction(language: Language) -> str:
+    if language == Language.CEBUANO:
+        return "Mahitungod sa unsa ang mosunod nga teksto?\n"
+    if language == Language.TAGALOG:
+        return "Tungkol saan ang sumusunod na pangungusap?\n"
+
+
+def create_task(language: Language, formulation):
+    return LightevalTaskConfig(
+        name=f"sib200_{language.value}_{formulation.name.lower()}",
+        prompt_function=get_mcq_prompt_function(
+            language,
+            lambda line: {
+                "question": get_instruction(language) + line["text"],
+                "choices": sib200_choices,
+                "gold_idx": sib200_choices.index(line["category"]),
+            },
+            formulation=formulation,
+        ),
+        suite=("filbench",),
+        hf_subset=f"{language.value}_Latn",
+        hf_repo="Davlan/sib200",
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+        hf_avail_splits=["test", "validation"],
+        evaluation_splits=["validation"],
+        few_shots_split="validation",
+        few_shots_select="random",
+        generation_size=-1,
+        trust_dataset=True,
+        version=0,
+    )
+
+
+FILIPINO_SIB_TASKS = [
+    create_task(language, formulation)
+    for language in [Language.TAGALOG, Language.CEBUANO]
+    for formulation in [MCFFormulation(), HybridFormulation()]
+]
 
 TASKS_TABLE: list[LightevalTaskConfig] = (
     FILIPINO_BALITA_TASKS
@@ -330,4 +522,10 @@ TASKS_TABLE: list[LightevalTaskConfig] = (
     + FILIPINO_READABILITY_TASKS
     + FILIPINO_DENGUE_TASKS
     + FILIPINO_FIRECS_TASK
+    + FILIPINO_GLOBAL_MMLU_TASKS
+    + FILIPINO_INCLUDE_TASKS
+    + FILIPINO_KALAHI_TASKS
+    + FILIPINO_NEWSPH_NLI_TASKS
+    + FILIPINO_NTREX_TASK
+    + FILIPINO_SIB_TASKS
 )
