@@ -21,10 +21,12 @@
 # SOFTWARE.
 
 # ruff: noqa: F405, F403, F401
+from collections import OrderedDict
 
 from langcodes import Language as LangCodeLanguage
 
 from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
+from lighteval.metrics.metrics import Metrics
 from lighteval.metrics.normalizations import (
     LogProbCharNorm,
     LogProbPMINorm,
@@ -32,6 +34,7 @@ from lighteval.metrics.normalizations import (
 )
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
 from lighteval.tasks.multilingual.utils.task_utils import get_metrics_for_formulation
+from lighteval.tasks.requests import Doc
 from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
 from lighteval.tasks.templates.utils.formulation import (
     CFFormulation,
@@ -181,6 +184,56 @@ FILIPINO_READABILITY_TASKS = [
         version=0,
     )
     for formulation in [MCFFormulation(), HybridFormulation()]
+]
+
+# Dengue
+
+dengue_filipino_subsets = {
+    "absent": "pagiging absent",
+    "dengue": "dengue",
+    "health": "kalusugan",
+    "mosquito": "lamok",
+    "sick": "sakit",
+}
+
+
+def filipino_dengue_pfn(line, task_name: str) -> Doc:
+    subset = task_name.split(":")[-1]
+    subset_keyword = dengue_filipino_subsets[subset]
+
+    instruction = f"Tungkol ba sa {subset_keyword} ang sumusunod na pangungusap? Piliin ang tamang sagot:\n\n"
+    choices: dict[str, str] = OrderedDict({"A": "Hindi", "B": "Oo"})
+
+    answer_index = int(line.get(subset))
+    query = f"{instruction}{line['text']}\n"
+    query += "".join([f"{key}. {choice}\n" for key, choice in choices.items()])
+    query += "Sagot:"
+    return Doc(
+        task_name=task_name,
+        query=query,
+        choices=list(choices.keys()),
+        gold_index=answer_index,
+        instruction=instruction,
+    )
+
+
+FILIPINO_DENGUE_TASKS = [
+    LightevalTaskConfig(
+        name=f"dengue_filipino_fil:{subset}",
+        hf_subset="default",
+        prompt_function=filipino_dengue_pfn,
+        hf_repo="jcblaise/dengue_filipino",
+        metric=[Metrics.loglikelihood_acc_norm],
+        hf_avail_splits=["train", "test", "validation"],
+        evaluation_splits=["train"],
+        few_shots_split="train",
+        few_shots_select="random",
+        suite=("filbench",),
+        generation_size=-1,
+        trust_dataset=True,
+        version=0,
+    )
+    for subset in dengue_filipino_subsets
 ]
 
 TASKS_TABLE: list[LightevalTaskConfig] = (
