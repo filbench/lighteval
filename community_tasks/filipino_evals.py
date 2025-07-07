@@ -22,8 +22,10 @@
 
 # ruff: noqa: F405, F403, F401
 from collections import OrderedDict
+from functools import partial
 
 from langcodes import Language as LangCodeLanguage
+from langcodes import standardize_tag
 
 from lighteval.metrics.dynamic_metrics import loglikelihood_acc_metric
 from lighteval.metrics.metrics import Metrics
@@ -32,7 +34,9 @@ from lighteval.metrics.normalizations import (
     LogProbPMINorm,
     LogProbTokenNorm,
 )
+from lighteval.tasks.default_prompts import LETTER_INDICES
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
+from lighteval.tasks.multilingual.tasks import MMLU_SUBSETS
 from lighteval.tasks.multilingual.utils.task_utils import get_metrics_for_formulation
 from lighteval.tasks.requests import Doc
 from lighteval.tasks.templates.multichoice import get_mcq_prompt_function
@@ -187,7 +191,6 @@ FILIPINO_READABILITY_TASKS = [
 ]
 
 # Dengue
-
 dengue_filipino_subsets = {
     "absent": "pagiging absent",
     "dengue": "dengue",
@@ -236,6 +239,95 @@ FILIPINO_DENGUE_TASKS = [
     for subset in dengue_filipino_subsets
 ]
 
+# FireCS
+firecs_choices = ["Negatibo", "Neutral", "Positibo"]
+
+FILIPINO_FIRECS_TASK = [
+    LightevalTaskConfig(
+        name=f"firecs_fil_{formulation.name.lower()}",
+        hf_subset="default",
+        prompt_function=get_mcq_prompt_function(
+            Language.TAGALOG,
+            lambda line: {
+                "question": f"Ano ang damdamin o sentimiyento ng sumusunod na pangungusap: {line['review']}",
+                "choices": firecs_choices,
+                "gold_idx": int(line["label"]),
+            },
+        ),
+        hf_repo="ccosme/FiReCS",
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+        hf_avail_splits=["train", "test"],
+        evaluation_splits=["train"],
+        few_shots_split="train",
+        few_shots_select="random",
+        suite=["filbench"],
+        generation_size=-1,
+        trust_dataset=True,
+        version=0,
+    )
+    for formulation in [MCFFormulation(), HybridFormulation()]
+]
+
+# Global-MMLU (FIl)
+
+FILIPINO_GLOBAL_MMLU_TASKS = [
+    LightevalTaskConfig(
+        name=f"global_mmlu_{sensitivity_label.lower()}_{language.value}_{formulation.name.lower()}:{subset}",
+        prompt_function=get_mcq_prompt_function(
+            language,
+            lambda line: {
+                "question": line["question"],
+                "choices": [
+                    line["option_a"],
+                    line["option_b"],
+                    line["option_c"],
+                    line["option_d"],
+                ],
+                "gold_idx": LETTER_INDICES.index(line["answer"]),
+            },
+            formulation=formulation,
+        ),
+        suite=("filbench",),
+        hf_repo="CohereForAI/Global-MMLU",
+        hf_subset=standardize_tag(language.value),
+        evaluation_splits=("test",),
+        few_shots_split="dev",
+        hf_filter=partial(
+            lambda subset, sensitivity_label, x: x["subject"].lower() == subset
+            and (
+                sensitivity_label == "ALL" or sensitivity_label in x["cultural_sensitivity_label"].replace("-", "UNK")
+            ),
+            subset,
+            sensitivity_label,
+        ),
+        metric=get_metrics_for_formulation(
+            formulation,
+            [
+                loglikelihood_acc_metric(normalization=LogProbTokenNorm()),
+                loglikelihood_acc_metric(normalization=LogProbCharNorm()),
+                loglikelihood_acc_metric(normalization=LogProbPMINorm()),
+            ],
+        ),
+    )
+    for subset in MMLU_SUBSETS
+    for language in [Language.TAGALOG]
+    for formulation in [MCFFormulation(), CFFormulation(), HybridFormulation()]
+    for sensitivity_label in ["ALL", "CA", "CS", "UNK"]
+]
+
+
 TASKS_TABLE: list[LightevalTaskConfig] = (
-    FILIPINO_BALITA_TASKS + FILIPINO_BELEBELE_TASKS + FILIPINO_CEBUANER_TASKS + FILIPINO_READABILITY_TASKS
+    FILIPINO_BALITA_TASKS
+    + FILIPINO_BELEBELE_TASKS
+    + FILIPINO_CEBUANER_TASKS
+    + FILIPINO_READABILITY_TASKS
+    + FILIPINO_DENGUE_TASKS
+    + FILIPINO_FIRECS_TASK
 )
