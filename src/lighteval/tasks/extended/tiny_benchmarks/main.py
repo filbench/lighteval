@@ -40,8 +40,8 @@ import lighteval.tasks.default_prompts as prompt
 from lighteval.metrics.metrics import CorpusLevelMetricGrouping, Metrics
 from lighteval.metrics.metrics_sample import ExactMatches, LoglikelihoodAcc
 from lighteval.metrics.normalizations import gsm8k_normalizer
+from lighteval.metrics.utils.metric_utils import MetricCategory, MetricUseCase
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
-from lighteval.tasks.requests import SamplingMethod
 
 
 # Utility functions
@@ -256,7 +256,7 @@ for task in task_params:
         evaluation_splits=task["evaluation_split"],
         few_shots_split=None,
         few_shots_select="random_sampling",
-        metrics=[f"tinybench_metric_{name}"],
+        metric=[f"tinybench_metric_{name}"],
         generation_size=generation_size,
         stop_sequence=stop_sequence,
     )
@@ -266,9 +266,11 @@ for task in task_params:
 for task_param in task_params:
     name = task_param["name"]
     if name == "gsm8k":
-        category = SamplingMethod.GENERATIVE
+        category = MetricCategory.GENERATIVE
+        use_case = MetricUseCase.MATH
     else:
-        category = SamplingMethod.LOGPROBS
+        category = MetricCategory.MULTICHOICE
+        use_case = MetricUseCase.ACCURACY
 
     extend_enum(
         Metrics,
@@ -278,6 +280,7 @@ for task_param in task_params:
             higher_is_better=dict.fromkeys(TinyCorpusAggregator.METRICS, True),
             sample_level_fn=TinyCorpusAggregator(name).compute,
             category=category,
+            use_case=use_case,
             corpus_level_fn=TinyCorpusAggregator(name).aggregate,
         ),
     )
