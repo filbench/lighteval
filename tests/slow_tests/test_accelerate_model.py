@@ -38,6 +38,7 @@ MODELS_ARGS = [
     # {"model_name": "gpt2", "use_chat_template": False, "revision": "main", "results_file": "tests/reference_scores/gpt2-results.json"},
     {
         "model_name": "examples/model_configs/transformers_model.yaml",
+        "use_chat_template": True,
         "results_file": "tests/reference_scores/SmolLM2-1.7B-Instruct-results-accelerate.json",
     }
 ]
@@ -48,11 +49,12 @@ ModelInput = Tuple[str, Callable[[], dict]]
 
 
 @lru_cache(maxsize=len(MODELS_ARGS))
-def run_model(model_name: str):
+def run_model(model_name: str, use_chat_template: bool):
     """Runs the full main as a black box, using the input model and tasks, on 10 samples without parallelism"""
     results = accelerate(
         model_args=model_name,
         tasks=TASKS_PATH,
+        use_chat_template=use_chat_template,
         output_dir="",
         dataset_loading_processes=1,
         save_details=False,
@@ -67,7 +69,7 @@ def generate_tests() -> list[ModelInput]:
 
     tests = []
     for model_args in MODELS_ARGS:
-        predictions_lite = partial(run_model, model_args["model_name"])
+        predictions_lite = partial(run_model, model_args["model_name"], model_args["use_chat_template"])
         tests.append((model_args, predictions_lite))
 
     return tests

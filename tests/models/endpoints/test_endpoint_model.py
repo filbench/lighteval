@@ -42,7 +42,6 @@ class TestInferenceEndpointModelConfig:
                     "region": "eu-west-1",
                     "vendor": "aws",
                     "instance_type": "nvidia-a10g",
-                    "batch_size": 1,
                     "instance_size": "x1",
                     "framework": "pytorch",
                     "endpoint_type": "protected",
@@ -50,7 +49,6 @@ class TestInferenceEndpointModelConfig:
                     "image_url": None,
                     "env_vars": None,
                     "add_special_tokens": True,
-                    "system_prompt": None,
                     "generation_parameters": {
                         "early_stopping": None,
                         "frequency_penalty": None,

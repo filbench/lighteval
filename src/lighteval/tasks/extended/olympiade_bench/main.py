@@ -218,7 +218,7 @@ for subset in olympiad_bench_subsets:
             suite=["extended"],
             hf_repo="Hothan/OlympiadBench",
             hf_subset=subset,
-            metrics=[metric],
+            metric=[metric],
             hf_avail_splits=["train"],
             evaluation_splits=["train"],
             few_shots_split="train",

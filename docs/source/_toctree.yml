@@ -41,11 +41,9 @@
     - local: package_reference/evaluation_tracker
       title: EvaluationTracker
     - local: package_reference/models
-      title: Model Configs
+      title: Models and ModelConfigs
     - local: package_reference/pipeline
       title: Pipeline
-    - local: package_reference/models_outputs
-      title: Model's Output
     title: Main classes
   - local: package_reference/metrics
     title: Metrics

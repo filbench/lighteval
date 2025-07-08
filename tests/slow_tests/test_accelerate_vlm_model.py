@@ -37,6 +37,7 @@ os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
 MODELS_ARGS = [
     {
         "model_name": "examples/model_configs/transformers_vlm_model.yaml",
+        "use_chat_template": True,
         "results_file": "tests/reference_scores/Qwen2.5-VL-3B-Instruct-results-vlm.json",
     }
 ]
@@ -46,11 +47,12 @@ ModelInput = Tuple[str, Callable[[], dict]]
 
 
 @lru_cache(maxsize=len(MODELS_ARGS))
-def run_model(model_name: str):
+def run_model(model_name: str, use_chat_template: bool):
     """Runs the full main as a black box, using the input model and tasks, on 10 samples without parallelism"""
     results = accelerate(
         model_args=model_name,
         tasks=TASKS,
+        use_chat_template=use_chat_template,
         output_dir="",
         dataset_loading_processes=1,
         save_details=False,
@@ -65,7 +67,7 @@ def generate_tests() -> list[ModelInput]:
 
     tests = []
     for model_args in MODELS_ARGS:
-        predictions_lite = partial(run_model, model_args["model_name"])
+        predictions_lite = partial(run_model, model_args["model_name"], model_args["use_chat_template"])
         tests.append((model_args, predictions_lite))
 
     return tests
