@@ -33,8 +33,6 @@ Paper link: https://aclanthology.org/2020.wmt-1.139/
 Dataset link: https://huggingface.co/datasets/Helsinki-NLP/tatoeba_mt
 """
 
-from imp import get_tag
-
 from lighteval.metrics.metrics import Metrics
 from lighteval.tasks.lighteval_task import LightevalTaskConfig
 from lighteval.tasks.templates.translation import get_translation_prompt_function

@@ -31,6 +31,7 @@ of the respective target language.
 Paper link: https://aclanthology.org/2022.sumeval-1.4.pdf
 Dataset link: https://huggingface.co/datasets/mteb/NTREX
 """
+
 from langcodes import Language as LangCodeLanguage
 
 from lighteval.metrics.metrics import Metrics

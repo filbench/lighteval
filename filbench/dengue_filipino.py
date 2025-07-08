@@ -29,6 +29,7 @@ of the following classes: absent, dengue, health, mosquito or sick.
 Paper link: https://ieeexplore.ieee.org/document/8459963
 Dataset link: https://huggingface.co/datasets/jcblaise/dengue_filipino
 """
+
 from collections import OrderedDict
 
 from lighteval.metrics.metrics import Metrics

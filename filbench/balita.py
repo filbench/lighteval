@@ -51,7 +51,7 @@ FILIPINO_BALITA_TASKS = [
             language=Language.TAGALOG,
             adapter=lambda line: {
                 "question": QUESTION,
-                "context": f'Teksto: {line["title_choice_first_paragraph"]}',
+                "context": f"Teksto: {line['title_choice_first_paragraph']}",
                 "choices": line["title_choices"],
                 "gold_idx": line["title_choice_gold_idx"],
             },

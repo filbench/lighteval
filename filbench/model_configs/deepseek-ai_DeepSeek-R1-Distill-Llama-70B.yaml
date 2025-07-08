@@ -3,7 +3,7 @@ model:
     model_args: "pretrained=deepseek-ai/DeepSeek-R1-Distill-Llama-70B,revision=main"
     dtype: "bfloat16"
     compile: true
-  merged_weights: 
+  merged_weights:
     delta_weights: false
     adapter_weights: false
     base_model: null

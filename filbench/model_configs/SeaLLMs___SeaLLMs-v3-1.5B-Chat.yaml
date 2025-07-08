@@ -3,7 +3,7 @@ model:
     model_args: "pretrained=SeaLLMs/SeaLLMs-v3-1.5B-Chat,revision=main"
     dtype: "bfloat16"
     compile: true
-  merged_weights: 
+  merged_weights:
     delta_weights: false
     adapter_weights: false
     base_model: null
@@ -17,4 +17,3 @@ model:
     min_p: 0.0
     top_p: 0.9
     max_new_tokens: 2048
-

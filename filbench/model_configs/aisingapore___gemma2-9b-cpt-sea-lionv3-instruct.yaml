@@ -3,7 +3,7 @@ model:
     model_args: "pretrained=aisingapore/gemma2-9b-cpt-sea-lionv3-instruct,revision=main"
     dtype: "bfloat16"
     compile: true
-  merged_weights: 
+  merged_weights:
     delta_weights: false
     adapter_weights: false
     base_model: null
