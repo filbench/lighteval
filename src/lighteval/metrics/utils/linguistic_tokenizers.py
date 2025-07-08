@@ -179,93 +179,93 @@ class StanzaTokenizer(WordTokenizer):
 # If you know a better tokenizer or better proxy language, please submit a PR
 TOKENIZER_FACTORY: dict[Language, Callable[[], WordTokenizer]] = {
     Language.ENGLISH: lambda: SpaCyTokenizer("en"),
-    Language.KOREAN: lambda: SpaCyTokenizer("ko"),
-    Language.GERMAN: lambda: SpaCyTokenizer("de"),
-    Language.FRENCH: lambda: SpaCyTokenizer("fr"),
-    Language.CZECH: lambda: SpaCyTokenizer("cz"),
-    Language.DANISH: lambda: SpaCyTokenizer("da"),
-    Language.DUTCH: lambda: SpaCyTokenizer("nl"),
-    Language.ESTONIAN: lambda: SpaCyTokenizer("et"),
-    Language.FINNISH: lambda: SpaCyTokenizer("fi"),
-    Language.GREEK: lambda: SpaCyTokenizer("el"),
-    Language.ITALIAN: lambda: SpaCyTokenizer("it"),
-    Language.MALAYALAM: lambda: SpaCyTokenizer("ml"),
-    Language.NORWEGIAN: lambda: SpaCyTokenizer("nb"),
-    Language.POLISH: lambda: SpaCyTokenizer("pl"),
-    Language.PORTUGUESE: lambda: SpaCyTokenizer("pt"),
-    Language.RUSSIAN: lambda: SpaCyTokenizer("ru"),
-    Language.SLOVENIAN: lambda: SpaCyTokenizer("sl"),
-    Language.SPANISH: lambda: SpaCyTokenizer("es"),
-    Language.SWEDISH: lambda: SpaCyTokenizer("sv"),
-    Language.TURKISH: lambda: SpaCyTokenizer("tr"),
-    Language.CHINESE: lambda: SpaCyTokenizer("zh", {"nlp": {"tokenizer": {"segmenter": "jieba"}}}),
-    Language.JAPANESE: lambda: SpaCyTokenizer("ja"),  # note that there are some issues for >50k chars text
-    Language.VIETNAMESE: lambda: SpaCyTokenizer("vi"),
-    Language.INDONESIAN: lambda: SpaCyTokenizer("id"),
-    Language.PERSIAN: lambda: SpaCyTokenizer("fa"),
-    Language.ARABIC: lambda: SpaCyTokenizer("ar"),
-    Language.HINDI: lambda: SpaCyTokenizer("hi"),
-    Language.TAMIL: lambda: SpaCyTokenizer("ta"),
-    Language.URDU: lambda: SpaCyTokenizer("ur"),
-    Language.MARATHI: lambda: SpaCyTokenizer("mr"),
-    Language.TELUGU: lambda: SpaCyTokenizer("te"),
-    Language.HUNGARIAN: lambda: SpaCyTokenizer("hu"),
-    Language.ROMANIAN: lambda: SpaCyTokenizer("ro"),
-    Language.UKRAINIAN: lambda: SpaCyTokenizer("uk"),
-    Language.SLOVAK: lambda: SpaCyTokenizer("sk"),
-    Language.BULGARIAN: lambda: SpaCyTokenizer("bg"),
-    Language.CATALAN: lambda: SpaCyTokenizer("ca"),
-    Language.CROATIAN: lambda: SpaCyTokenizer("hr"),
-    Language.LATIN: lambda: SpaCyTokenizer("la"),
-    Language.SERBIAN: lambda: SpaCyTokenizer("sr"),
-    Language.LITHUANIAN: lambda: SpaCyTokenizer("lt"),
-    Language.HEBREW: lambda: SpaCyTokenizer("he"),
-    Language.LATVIAN: lambda: SpaCyTokenizer("lv"),
-    Language.ICELANDIC: lambda: SpaCyTokenizer("is"),
-    Language.ARMENIAN: lambda: SpaCyTokenizer("hy"),
-    Language.BASQUE: lambda: SpaCyTokenizer("eu"),
-    Language.THAI: lambda: SpaCyTokenizer("th"),
+    # Language.KOREAN: lambda: SpaCyTokenizer("ko"),
+    # Language.GERMAN: lambda: SpaCyTokenizer("de"),
+    # Language.FRENCH: lambda: SpaCyTokenizer("fr"),
+    # Language.CZECH: lambda: SpaCyTokenizer("cz"),
+    # Language.DANISH: lambda: SpaCyTokenizer("da"),
+    # Language.DUTCH: lambda: SpaCyTokenizer("nl"),
+    # Language.ESTONIAN: lambda: SpaCyTokenizer("et"),
+    # Language.FINNISH: lambda: SpaCyTokenizer("fi"),
+    # Language.GREEK: lambda: SpaCyTokenizer("el"),
+    # Language.ITALIAN: lambda: SpaCyTokenizer("it"),
+    # Language.MALAYALAM: lambda: SpaCyTokenizer("ml"),
+    # Language.NORWEGIAN: lambda: SpaCyTokenizer("nb"),
+    # Language.POLISH: lambda: SpaCyTokenizer("pl"),
+    # Language.PORTUGUESE: lambda: SpaCyTokenizer("pt"),
+    # Language.RUSSIAN: lambda: SpaCyTokenizer("ru"),
+    # Language.SLOVENIAN: lambda: SpaCyTokenizer("sl"),
+    # Language.SPANISH: lambda: SpaCyTokenizer("es"),
+    # Language.SWEDISH: lambda: SpaCyTokenizer("sv"),
+    # Language.TURKISH: lambda: SpaCyTokenizer("tr"),
+    # Language.CHINESE: lambda: SpaCyTokenizer("zh", {"nlp": {"tokenizer": {"segmenter": "jieba"}}}),
+    # Language.JAPANESE: lambda: SpaCyTokenizer("ja"),  # note that there are some issues for >50k chars text
+    # Language.VIETNAMESE: lambda: SpaCyTokenizer("vi"),
+    # Language.INDONESIAN: lambda: SpaCyTokenizer("id"),
+    # Language.PERSIAN: lambda: SpaCyTokenizer("fa"),
+    # Language.ARABIC: lambda: SpaCyTokenizer("ar"),
+    # Language.HINDI: lambda: SpaCyTokenizer("hi"),
+    # Language.TAMIL: lambda: SpaCyTokenizer("ta"),
+    # Language.URDU: lambda: SpaCyTokenizer("ur"),
+    # Language.MARATHI: lambda: SpaCyTokenizer("mr"),
+    # Language.TELUGU: lambda: SpaCyTokenizer("te"),
+    # Language.HUNGARIAN: lambda: SpaCyTokenizer("hu"),
+    # Language.ROMANIAN: lambda: SpaCyTokenizer("ro"),
+    # Language.UKRAINIAN: lambda: SpaCyTokenizer("uk"),
+    # Language.SLOVAK: lambda: SpaCyTokenizer("sk"),
+    # Language.BULGARIAN: lambda: SpaCyTokenizer("bg"),
+    # Language.CATALAN: lambda: SpaCyTokenizer("ca"),
+    # Language.CROATIAN: lambda: SpaCyTokenizer("hr"),
+    # Language.LATIN: lambda: SpaCyTokenizer("la"),
+    # Language.SERBIAN: lambda: SpaCyTokenizer("sr"),
+    # Language.LITHUANIAN: lambda: SpaCyTokenizer("lt"),
+    # Language.HEBREW: lambda: SpaCyTokenizer("he"),
+    # Language.LATVIAN: lambda: SpaCyTokenizer("lv"),
+    # Language.ICELANDIC: lambda: SpaCyTokenizer("is"),
+    # Language.ARMENIAN: lambda: SpaCyTokenizer("hy"),
+    # Language.BASQUE: lambda: SpaCyTokenizer("eu"),
+    # Language.THAI: lambda: SpaCyTokenizer("th"),
     Language.TAGALOG: lambda: SpaCyTokenizer("tl"),
-    Language.ALBANIAN: lambda: SpaCyTokenizer("sq"),
-    Language.MACEDONIAN: lambda: SpaCyTokenizer("mk"),
-    Language.AZERBAIJANI: lambda: SpaCyTokenizer("az"),
-    Language.AMHARIC: lambda: SpaCyTokenizer("am"),
-    Language.BENGALI: lambda: SpaCyTokenizer("bn"),
-    Language.MALAY: lambda: SpaCyTokenizer("ms"),
-    Language.NEPALI: lambda: SpaCyTokenizer("ne"),
-    Language.KAZAKH: lambda: StanzaTokenizer("kk"),
-    Language.GUJARATI: lambda: SpaCyTokenizer("gu"),
-    Language.KANNADA: lambda: SpaCyTokenizer("kn"),
-    Language.WELSH: lambda: StanzaTokenizer("cy"),
-    Language.NORWEGIAN_NYNORSK: lambda: SpaCyTokenizer("nn"),
-    Language.SINHALA: lambda: SpaCyTokenizer("si"),
-    Language.TATAR: lambda: SpaCyTokenizer("tt"),
-    Language.AFRIKAANS: lambda: SpaCyTokenizer("af"),
-    Language.KIRGHIZ: lambda: SpaCyTokenizer("ky"),
-    Language.IRISH: lambda: SpaCyTokenizer("ga"),
-    Language.LUXEMBOURGISH: lambda: SpaCyTokenizer("lb"),
-    Language.MALTESE: lambda: StanzaTokenizer("mt"),
-    Language.SANSKRIT: lambda: SpaCyTokenizer("sa"),
-    Language.YORUBA: lambda: SpaCyTokenizer("yo"),
-    Language.SERBOCROATIAN: lambda: SpaCyTokenizer("sr"),
-    Language.BELARUSIAN: lambda: StanzaTokenizer("be"),
+    # Language.ALBANIAN: lambda: SpaCyTokenizer("sq"),
+    # Language.MACEDONIAN: lambda: SpaCyTokenizer("mk"),
+    # Language.AZERBAIJANI: lambda: SpaCyTokenizer("az"),
+    # Language.AMHARIC: lambda: SpaCyTokenizer("am"),
+    # Language.BENGALI: lambda: SpaCyTokenizer("bn"),
+    # Language.MALAY: lambda: SpaCyTokenizer("ms"),
+    # Language.NEPALI: lambda: SpaCyTokenizer("ne"),
+    # Language.KAZAKH: lambda: StanzaTokenizer("kk"),
+    # Language.GUJARATI: lambda: SpaCyTokenizer("gu"),
+    # Language.KANNADA: lambda: SpaCyTokenizer("kn"),
+    # Language.WELSH: lambda: StanzaTokenizer("cy"),
+    # Language.NORWEGIAN_NYNORSK: lambda: SpaCyTokenizer("nn"),
+    # Language.SINHALA: lambda: SpaCyTokenizer("si"),
+    # Language.TATAR: lambda: SpaCyTokenizer("tt"),
+    # Language.AFRIKAANS: lambda: SpaCyTokenizer("af"),
+    # Language.KIRGHIZ: lambda: SpaCyTokenizer("ky"),
+    # Language.IRISH: lambda: SpaCyTokenizer("ga"),
+    # Language.LUXEMBOURGISH: lambda: SpaCyTokenizer("lb"),
+    # Language.MALTESE: lambda: StanzaTokenizer("mt"),
+    # Language.SANSKRIT: lambda: SpaCyTokenizer("sa"),
+    # Language.YORUBA: lambda: SpaCyTokenizer("yo"),
+    # Language.SERBOCROATIAN: lambda: SpaCyTokenizer("sr"),
+    # Language.BELARUSIAN: lambda: StanzaTokenizer("be"),
     # proxies
-    Language.BOSNIAN: lambda: SpaCyTokenizer("hr"),  # Proxy
-    Language.ESPERANTO: lambda: SpaCyTokenizer("en"),  # Proxy
-    Language.OCCITAN: lambda: SpaCyTokenizer("ca"),  # Proxy
-    Language.SWAHILI: lambda: SpaCyTokenizer("en"),  # Proxy
-    Language.JAVANESE: lambda: SpaCyTokenizer("en"),  # Proxy
-    Language.UZBEK: lambda: SpaCyTokenizer("tr"),  # Proxy, alternative ru
-    Language.TAJIK: lambda: SpaCyTokenizer("ru"),  # Proxy
-    Language.KURDISH: lambda: SpaCyTokenizer("en"),  # Proxy, multiple scripts!
-    Language.BASHKIR: lambda: SpaCyTokenizer("tt"),  # Proxy
-    Language.WESTERN_FRISIAN: lambda: SpaCyTokenizer("nl"),  # Proxy
-    Language.BRETON: lambda: StanzaTokenizer("cy"),  # Proxy
-    Language.MALAGASY: lambda: SpaCyTokenizer("en"),  # Proxy
-    Language.YIDDISH: lambda: SpaCyTokenizer("he"),  # Proxy
-    Language.SOMALI: lambda: SpaCyTokenizer("en"),  # Proxy
-    Language.TURKMEN: lambda: SpaCyTokenizer("tr"),  # Proxy
-    Language.PASHTO: lambda: SpaCyTokenizer("xx"),  # Proxy. xx is "multi-language"
+    # Language.BOSNIAN: lambda: SpaCyTokenizer("hr"),  # Proxy
+    # Language.ESPERANTO: lambda: SpaCyTokenizer("en"),  # Proxy
+    # Language.OCCITAN: lambda: SpaCyTokenizer("ca"),  # Proxy
+    # Language.SWAHILI: lambda: SpaCyTokenizer("en"),  # Proxy
+    # Language.JAVANESE: lambda: SpaCyTokenizer("en"),  # Proxy
+    # Language.UZBEK: lambda: SpaCyTokenizer("tr"),  # Proxy, alternative ru
+    # Language.TAJIK: lambda: SpaCyTokenizer("ru"),  # Proxy
+    # Language.KURDISH: lambda: SpaCyTokenizer("en"),  # Proxy, multiple scripts!
+    # Language.BASHKIR: lambda: SpaCyTokenizer("tt"),  # Proxy
+    # Language.WESTERN_FRISIAN: lambda: SpaCyTokenizer("nl"),  # Proxy
+    # Language.BRETON: lambda: StanzaTokenizer("cy"),  # Proxy
+    # Language.MALAGASY: lambda: SpaCyTokenizer("en"),  # Proxy
+    # Language.YIDDISH: lambda: SpaCyTokenizer("he"),  # Proxy
+    # Language.SOMALI: lambda: SpaCyTokenizer("en"),  # Proxy
+    # Language.TURKMEN: lambda: SpaCyTokenizer("tr"),  # Proxy
+    # Language.PASHTO: lambda: SpaCyTokenizer("xx"),  # Proxy. xx is "multi-language"
 }
 
 
